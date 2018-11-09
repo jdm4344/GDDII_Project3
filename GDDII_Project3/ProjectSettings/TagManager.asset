@@ -38,6 +38,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Overlay
+    uniqueID: 2054289149
+    locked: 0
+  - name: Game
+    uniqueID: 2687716649
+    locked: 0
+  - name: Detail
+    uniqueID: 3423812787
+    locked: 0
+  - name: Map
+    uniqueID: 1650136555
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
