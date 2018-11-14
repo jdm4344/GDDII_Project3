@@ -2,32 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-/*
- * 
+using UnityEngine.SceneManagement;
+/* Authors: Jordan Machalek
+ * Contains behavior for main menu functionality
  */
 public class MenuManager : MonoBehaviour {
 
     // Variables
     public GameObject menuPanel;
     // Minigame specific variables
+    [Header("Minigame Variables")]
+    [Space(5)]
     public GameObject minigamePanel;    
     public List<string> minigames; // List of names of scenes
     private Stack<string> playedMinigames; // Keeps track of minigames that have been played, clears when all have been played once
     public GameObject iconContainer;
     [SerializeField]
     private List<GameObject> icons;
+    public GameObject countdownPopup; // Parent Image with a child Text displaying time before minigame loads
+    private float timer = 3;
+    private bool loadMinigame = false;
 
     // Board-space specific variables
+    [Header("Map Variables")]
+    [Space(5)]
     public GameObject mapPanel;    
     public GameObject spaceContainer; // Gameobject whose children are spaces on the board
     [SerializeField]
     private List<GameObject> spaces;
-    
-    
 
 	// Use this for initialization
 	void Start () 
     {
+        // Show and hide panels for redundancy's sake
+        menuPanel.SetActive(true);
+        minigamePanel.SetActive(false);
+        mapPanel.SetActive(false);
+
         playedMinigames = new Stack<string>();
         spaces = new List<GameObject>();
 
@@ -48,8 +59,16 @@ public class MenuManager : MonoBehaviour {
 	void Update () 
     {
         // Clear the stack of played minigames if they have all been played
-	    if(playedMinigames.Count == minigames.Count) {playedMinigames.Clear(); }	
-	}
+	    if(playedMinigames.Count == minigames.Count) {playedMinigames.Clear(); }
+
+        if(loadMinigame)
+        {
+            timer -= Time.deltaTime;
+            countdownPopup.GetComponentInChildren<Text>().text = "Minigame begins in: " + timer.ToString("F1");
+
+            if (timer <= 0) { SceneManager.LoadScene("MinigameAsteroids"); } // TODO: Change to be dynamic, create string for the selected minigame
+        }
+    }
 
     /// <summary>
     /// Randomly selects and loads a minigame from the 'minigames' list
@@ -67,10 +86,12 @@ public class MenuManager : MonoBehaviour {
             gameNum = Random.Range(0, minigames.Count);
             if(!playedMinigames.Contains(minigames[gameNum])) { break;}
         }
-
-        Debug.Log(gameNum);
+        
         playedMinigames.Push(minigames[gameNum]);
         icons[gameNum].GetComponent<RawImage>().color = Color.red;
+        // Show popup and start countdown
+        countdownPopup.SetActive(true);
+        loadMinigame = true;
     }
 
     /// <summary>
@@ -121,6 +142,11 @@ public class MenuManager : MonoBehaviour {
     {
         menuPanel.SetActive(!menuPanel.activeSelf);
         minigamePanel.SetActive(!minigamePanel.activeSelf);
+        countdownPopup.SetActive(!countdownPopup.activeSelf);
+
+        // Stop countdown for loading minigame
+        timer = 3;
+        loadMinigame = false;
 
         // Reset colors of game icons
         foreach(GameObject icon in icons)
