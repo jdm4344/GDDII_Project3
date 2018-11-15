@@ -235,5 +235,6 @@ public class ShipPhysics : MonoBehaviour
     public void LoseHealth()
     {
         health--;
+        Debug.Log("Player " + player + " Health : " + health);
     }
 }

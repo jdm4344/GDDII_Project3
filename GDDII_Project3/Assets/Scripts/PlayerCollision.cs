@@ -92,12 +92,6 @@ public class PlayerCollision : MonoBehaviour {
             manager.GetComponent<StatManager>().currentWeapon = "Beam";
             pickedUpPowerup = false;
         }
-        if (powerUpTimer3 < 0 && pickedUpPowerup)
-        {
-            Debug.Log("Powerup finished");
-            // Return everything to defaults
-            isInvulnerable = false;
-        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -145,7 +139,7 @@ public class PlayerCollision : MonoBehaviour {
 
     void Shield()
     {
-        powerUpTimer3 = shieldDuration;
+        invincibilityTimer = shieldDuration;
         isInvulnerable = true;
     }
 
