@@ -16,6 +16,7 @@ public class MenuManager : MonoBehaviour {
     public GameObject minigamePanel;    
     public List<string> minigames; // List of names of scenes
     private Stack<string> playedMinigames; // Keeps track of minigames that have been played, clears when all have been played once
+    private string selectedMinigame;
     public GameObject iconContainer;
     [SerializeField]
     private List<GameObject> icons;
@@ -65,8 +66,9 @@ public class MenuManager : MonoBehaviour {
         {
             timer -= Time.deltaTime;
             countdownPopup.GetComponentInChildren<Text>().text = "Minigame begins in: " + timer.ToString("F1");
-
-            if (timer <= 0) { SceneManager.LoadScene("MinigameAsteroids"); } // TODO: Change to be dynamic, create string for the selected minigame
+            
+            // Play the selected minigame
+            if (timer <= 0) { SceneManager.LoadScene(selectedMinigame); }
         }
     }
 
@@ -86,8 +88,9 @@ public class MenuManager : MonoBehaviour {
             gameNum = Random.Range(0, minigames.Count);
             if(!playedMinigames.Contains(minigames[gameNum])) { break;}
         }
-        
-        playedMinigames.Push(minigames[gameNum]);
+
+        selectedMinigame = minigames[gameNum];
+        playedMinigames.Push(selectedMinigame);
         icons[gameNum].GetComponent<RawImage>().color = Color.red;
         // Show popup and start countdown
         countdownPopup.SetActive(true);

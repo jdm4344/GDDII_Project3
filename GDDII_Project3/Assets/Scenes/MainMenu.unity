@@ -4436,7 +4436,7 @@ MonoBehaviour:
   menuPanel: {fileID: 1208833882}
   minigamePanel: {fileID: 561178888}
   minigames:
-  - Asteroids
+  - MinigameAsteroids
   iconContainer: {fileID: 1658586129}
   icons: []
   countdownPopup: {fileID: 351578982}
