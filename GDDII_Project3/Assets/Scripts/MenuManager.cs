@@ -13,24 +13,24 @@ public class MenuManager : MonoBehaviour {
     // Minigame specific variables
     [Header("Minigame Variables")]
     [Space(5)]
-    public GameObject minigamePanel;    
+    public GameObject minigamePanel; // UI Panel obj that is parent of all minigame UI objs
     public List<string> minigames; // List of names of scenes
     private Stack<string> playedMinigames; // Keeps track of minigames that have been played, clears when all have been played once
-    private string selectedMinigame;
-    public GameObject iconContainer;
+    private string selectedMinigame; // Minigame chosen in PickMinigame()
+    public GameObject iconContainer; // Gameobject whose children are Image objs displaying minigame names
     [SerializeField]
-    private List<GameObject> icons;
-    public GameObject countdownPopup; // Parent Image with a child Text displaying time before minigame loads
+    private List<GameObject> icons; // List of Image objs 
+    public GameObject countdownPopup; // Parent Image obj with a child Text obj displaying time before minigame loads
     private float timer = 3;
     private bool loadMinigame = false;
 
     // Board-space specific variables
     [Header("Map Variables")]
     [Space(5)]
-    public GameObject mapPanel;    
+    public GameObject mapPanel; // UI Panel obj that is parent of all map UI objs
     public GameObject spaceContainer; // Gameobject whose children are spaces on the board
     [SerializeField]
-    private List<GameObject> spaces;
+    private List<GameObject> spaces; // List of Image objs
 
 	// Use this for initialization
 	void Start () 
@@ -59,9 +59,6 @@ public class MenuManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
-        // Clear the stack of played minigames if they have all been played
-	    if(playedMinigames.Count == minigames.Count) {playedMinigames.Clear(); }
-
         if(loadMinigame)
         {
             timer -= Time.deltaTime;
@@ -83,7 +80,11 @@ public class MenuManager : MonoBehaviour {
 
         int gameNum;
 
-        while(true)
+        // Clear the stack of played minigames if they have all been played
+        if (playedMinigames.Count == minigames.Count) { playedMinigames.Clear(); }
+
+        // Pick a minigame that hasn't been played
+        while (true)
         {
             gameNum = Random.Range(0, minigames.Count);
             if(!playedMinigames.Contains(minigames[gameNum])) { break;}
