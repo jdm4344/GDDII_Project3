@@ -13,9 +13,9 @@ public class PlayerCollision : MonoBehaviour {
 
     private double timer;
     private double invincibilityTimer;
-    private double powerUpTimer1;
-    private double powerUpTimer2;
-    private double powerUpTimer3;
+    //private double powerUpTimer1;
+    //private double powerUpTimer2;
+    //private double powerUpTimer3;
 
     private float invincibilityDuration;
     private float shieldDuration;
@@ -27,48 +27,50 @@ public class PlayerCollision : MonoBehaviour {
     void Start ()
     {
         timer = 0;
-        invincibilityTimer = manager.GetComponent<StatManager>().invincibilityTime;;
-        invincibilityDuration = manager.GetComponent<StatManager>().invincibilityTime;
+        invincibilityTimer = 0;
+        invincibilityDuration = GetComponent<StatManager>().invincibilityTime;
         shieldDuration = 2;
-        powerUpTimer1 = 0;
+        /*powerUpTimer1 = 0;
         powerUpTimer2 = 0;
-        powerUpTimer3 = 0;
+        powerUpTimer3 = 0;*/
     }
 	
 	// Update
-	void FixedUpdate () {
-
+	void FixedUpdate () 
+    {
         /* Debugging for Collision
         if (isColliding)
         {
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }*/
 
-        lives = manager.GetComponent<ShipPhysics>().health;
+        lives = gameObject.GetComponent<CarController>().health;
+
         if (lives == 0)
         {
             manager.GetComponent<StatManager>().SubtractPlayer();
             GameObject.Destroy(gameObject);
         }
 
+        Debug.Log(" ~ " + timer);
         timer -= Time.deltaTime;
         invincibilityTimer -= Time.deltaTime;
-        powerUpTimer1 -= Time.deltaTime;
+        /*powerUpTimer1 -= Time.deltaTime;
         powerUpTimer2 -= Time.deltaTime;
-        powerUpTimer3 -= Time.deltaTime;
+        powerUpTimer3 -= Time.deltaTime;*/
 
         // For flashing color for visual effect
         if (timer < 0)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            GetComponent<SpriteRenderer>().color = Color.white;
         }
         else if (timer < invincibilityDuration / 2)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            GetComponent<SpriteRenderer>().color = Color.red;
         }
         else if (timer < invincibilityDuration)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            GetComponent<SpriteRenderer>().color = Color.white;
         }
 
         // Invincibility frames
@@ -77,12 +79,12 @@ public class PlayerCollision : MonoBehaviour {
             isInvulnerable = false;
         }
 
-        if (powerUpTimer1 < 0 && pickedUpBonus)
+        /*if (powerUpTimer1 < 0 && pickedUpBonus)
         {
             Debug.Log("Powerup finished");
             // Return everything to defaults
-            gameObject.GetComponent<ShipPhysics>().maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
-            gameObject.GetComponent<ShipPhysics>().maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
+            gameObject.GetComponent<CarController>().maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
+            gameObject.GetComponent<CarController>().maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
             pickedUpBonus = false;
         }
         if (powerUpTimer2 < 0 && pickedUpPowerup)
@@ -91,50 +93,42 @@ public class PlayerCollision : MonoBehaviour {
             // Return everything to defaults
             manager.GetComponent<StatManager>().currentWeapon = "Beam";
             pickedUpPowerup = false;
-        }
+        }*/
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D col)
     {
         Debug.Log("hit");
-        if ((other.gameObject.tag == "Player") && !isInvulnerable)
+        if (!isInvulnerable) 
         {
-            Debug.Log("Hit");
-            DamageFlash();
-            isInvulnerable = true;
-            invincibilityTimer = invincibilityDuration;
-            GetComponent<ShipPhysics>().LoseHealth();
+            if ((col.otherCollider.gameObject.tag == "Player"))
+            {
+                DamageFlash();
+                isInvulnerable = true;
+                invincibilityTimer = invincibilityDuration;
+                GetComponent<CarController>().LoseHealth();
+            }
         }
-        else if (other.gameObject.tag == "PulseBeam")
-        {
-            pickedUpPowerup = true;
-            Debug.Log("Picked Up PulseBeam");
-            ChangeWeapon("PulseBeam");
-        }
-        else if (other.gameObject.tag == "Shield")
+
+        /*
+        else if (col.otherCollider.gameObject.tag == "Shield")
         {
             Debug.Log("Gained Shield");
             Shield();
         }
-        else if (other.gameObject.tag == "SpeedBoost")
+        else if (col.otherCollider.gameObject.tag == "SpeedBoost")
         {
             pickedUpBonus = true;
             Debug.Log("Gained A Speed Boost");
             SpeedBoost();
-        }
-        else if (other.gameObject.tag == "GattlingGun")
-        {
-            pickedUpPowerup = true;
-            Debug.Log("Picked Up Gattling Gun");
-            ChangeWeapon("GattlingGun");
-        }
+        }*/
     }
 
     void DamageFlash()
     {
+        Debug.Log("Damaged");
         timer = manager.GetComponent<StatManager>().damageFlashTime;
         gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
-
     }
 
     void Shield()
@@ -145,21 +139,8 @@ public class PlayerCollision : MonoBehaviour {
 
     void SpeedBoost()
     {
-        powerUpTimer1 = manager.GetComponent<StatManager>().powerUpDuration;
-        gameObject.GetComponent<ShipPhysics>().maxVel = manager.GetComponent<StatManager>().maxVelBoost;
-        gameObject.GetComponent<ShipPhysics>().maxAcc = manager.GetComponent<StatManager>().maxAccBoost;
-    }
-
-    void ChangeWeapon(string nameVar)
-    {
-        if (nameVar == "PulseBeam")
-        {
-            powerUpTimer2 = manager.GetComponent<StatManager>().powerUpDuration * 1.5;
-        }
-        else
-        {
-            powerUpTimer2 = manager.GetComponent<StatManager>().powerUpDuration;
-        }
-        manager.GetComponent<StatManager>().currentWeapon = nameVar;
+        //powerUpTimer1 = manager.GetComponent<StatManager>().powerUpDuration;
+        gameObject.GetComponent<CarController>().maxVel = manager.GetComponent<StatManager>().maxVelBoost;
+        gameObject.GetComponent<CarController>().maxAcc = manager.GetComponent<StatManager>().maxAccBoost;
     }
 }
