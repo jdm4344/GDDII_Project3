@@ -7,6 +7,7 @@ public class StatManager : MonoBehaviour {
 
     // ==== VARIABLES ====
     // ~ Game
+    public bool testMode = true;
     public int currentPlayers = 4;
     public float gameTimer = 0;
     public string winner;
@@ -47,15 +48,19 @@ public class StatManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log("Players - " + currentPlayers);
-        if (Input.GetKey("r")) 
-        {   
-            Debug.Log("restart");
-            SceneManager.LoadScene("MinigameAsteroids");
-        }
-        if (Input.GetKey("o"))
+        if (testMode)
         {
-            Instantiate(boost, new Vector3(0, 2, 0), Quaternion.Euler(0, 0, 0));
+            Debug.Log("Players - " + currentPlayers);
+
+            if (Input.GetKey("r")) 
+            {   
+                Debug.Log("restart");
+                SceneManager.LoadScene("MinigameAsteroids");
+            }
+            if (Input.GetKey("o"))
+            {
+                Instantiate(boost, new Vector3(0, 2, 0), Quaternion.Euler(0, 0, 0));
+            }
         }
 	}
 

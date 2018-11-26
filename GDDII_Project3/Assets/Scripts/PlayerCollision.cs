@@ -130,7 +130,9 @@ public class PlayerCollision : MonoBehaviour {
         Debug.Log("hit");
         if (!isInvulnerable) 
         {
-            if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerCollision>().maxMov)
+            if (
+               (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerCollision>().maxMov) 
+             || col.gameObject.tag == "Enemy")
             {
                 DamageFlash();
                 isInvulnerable = true;

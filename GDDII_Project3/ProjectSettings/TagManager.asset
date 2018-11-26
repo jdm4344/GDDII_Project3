@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Shop Space
   - SpeedBoost
+  - Manager
   layers:
   - Default
   - TransparentFX

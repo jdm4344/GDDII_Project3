@@ -2,44 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour {
-    
-    // ==== VARIABLES ====
+public class VehicleScript : MonoBehaviour 
+{
+	// ==== VARIABLES ====
 
-    // ~ Settings
-    private Renderer sceneRenderer;
-
-    // ~ GameObj Refs
+	// ~ GameObj Refs
     public StatManager manager;
     public Camera cam;
     public GameObject exhausts;
+    public GameObject explosion;
 
-    // ~ Input
-    private float joyStickHorizInput = 0;
-    private float triggerInput = 0;
-
-    // ~ Physics
-    private Rigidbody2D rgbd;
+	// ~ Physics
     private Vector2 position;
     private Vector2 velocity;
     private Vector2 acceleration;
-    private float rotationSpeed = 3;
+    private float rotationSpeed = 0.025f;
     private float deltaAngle = 0;
     private float decelConst = 0.0005f;
     public float maxVel;
     public float maxAcc;
 
     // ~ In-game Settings
-    private Rect gameBorderRect;
     private float currentShipFloat = 0.01f;
     const float defaultFloatVal = 0.010f;
-    public int player;
     
     // ~ Stats & Effects
+	public MovePattern movePattern = MovePattern.Straight;
+	public float moveSpd = 0.5f; // Acts as input
+	public float swerveTimer;
+	public float swerveAmount = 1.0f;
     public int bombs = 0;
-    public int health = 3;
     public bool slowed;
-    
+
+	// ==== ENUMS ====
+	
+	public enum MovePattern
+	{
+		Straight = 0,
+		Swerve = 1,
+		Kamikaze = 2,
+		AreaBomber = 3
+	}
+
 
     // ==== PROPERTIES ====
 
@@ -53,13 +57,12 @@ public class CarController : MonoBehaviour {
     }
 
 
-    // ==== METHODS ====
+	// ==== METHODS ====
 
-    void Start()
-    {
-        sceneRenderer = GetComponentInChildren<Renderer>();
-        gameBorderRect = new Rect(cam.transform.position.x - 5.75f, cam.transform.position.y - 4.6f, 11.25f, 9.25f);
-        rgbd = GetComponent<Rigidbody2D>();
+	void Awake () 
+	{
+		manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<StatManager>();
+		cam = Camera.FindObjectOfType<Camera>();
 
         maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
         maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
@@ -67,33 +70,49 @@ public class CarController : MonoBehaviour {
         position = transform.position;
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
-        deltaAngle = transform.rotation.eulerAngles.z + 90;
-    }
+        deltaAngle = transform.rotation.eulerAngles.z;
 
-    void FixedUpdate()
-    {
-        // ================= Debugging ===================
+		swerveTimer = 0;
+	}
+	
+	void FixedUpdate () 
+	{
+		// ================= Movement ====================
 
-        //Debug.Log(acceleration);
-        //Debug.Log(velocity);
-        //Debug.Log(position);
+		// Determines specific physics calculations based on movement pattern
+        switch (movePattern)
+		{
+			case MovePattern.Straight:
+				moveSpd = 0.65f;
+				break;
 
-        // ================= Movement ====================
+			case MovePattern.Swerve:
+				// Swerve back and forth
+				swerveTimer += Time.deltaTime / 2;
+				float mod = swerveTimer % swerveAmount;
+				if (mod > 0 && mod < swerveAmount / 2) 
+					deltaAngle -= rotationSpeed;
+				else if (mod > swerveAmount / 2 && mod < swerveAmount)
+					deltaAngle += rotationSpeed; 
+				// Move forward as well
+				moveSpd = 0.4f;
+				break;
 
-        // Turning - rotation
-        if (joyStickHorizInput < -0.5f)
-        {
-            deltaAngle -= rotationSpeed; //Left
-        }
-        else if (joyStickHorizInput > 0.5f)
-        {
-            deltaAngle += rotationSpeed; //Right
-        }
+			case MovePattern.Kamikaze:
+				break;
+
+			case MovePattern.AreaBomber:
+				break;
+
+			default:
+				Debug.Log("VehicleScript ~ Couldn't specify a movement pattern.");
+				break;
+		}
 
         // Gas - acceleration
-        if (triggerInput > 0.1f)
+        if (moveSpd > 0.1f)
         {
-            acceleration = new Vector2(maxAcc * triggerInput * Time.deltaTime, maxAcc * triggerInput * Time.deltaTime);
+            acceleration = new Vector2(maxAcc * moveSpd * Time.deltaTime, maxAcc * moveSpd * Time.deltaTime);
             rotationSpeed = 3;
         }
         else
@@ -120,7 +139,7 @@ public class CarController : MonoBehaviour {
         }
 
         // Braking
-        if (triggerInput < -0.4f)
+        if (moveSpd < -0.4f)
         {
             currentShipFloat = 0;
             rotationSpeed = 0; // Shouldn't be able to turn/rotate while not moving
@@ -153,15 +172,11 @@ public class CarController : MonoBehaviour {
             velocity.y = maxVel;
             acceleration.y = 0;
         }
-
-        // ================= Borders =====================
-
-        GameBorder();
         
         // ========= Adjust GameObject Values ============
 
         // Alter rotation
-        transform.rotation = Quaternion.Euler(0, 0, deltaAngle - 90);
+        transform.rotation = Quaternion.Euler(0, 0, deltaAngle);
 
         // Alter velocity
         velocity += acceleration;
@@ -176,51 +191,19 @@ public class CarController : MonoBehaviour {
 
         // Alter position
         exhausts.transform.position = transform.position;
-        exhausts.transform.localPosition = exhausts.transform.localPosition + new Vector3(0.0f, -0.466f);
+        exhausts.transform.localPosition = exhausts.transform.localPosition + new Vector3(-0.8f, 0.0f);
         exhausts.transform.rotation = Quaternion.Euler(0, 0, deltaAngle - 90);
-    }
 
-    void Update() 
+	}
+
+
+	// ================================
+	// ========== COLLISION ===========
+	// ================================
+
+	void OnCollisionEnter2D(Collision2D col)
     {
-        // Handle Input
-        joyStickHorizInput = Input.GetAxis("J" + player + "Horizontal");
-        triggerInput = Input.GetAxis("J" + player + "Triggers");
-
-        // Move Boundaries
-        gameBorderRect = new Rect(cam.transform.position.x - 5.75f, cam.transform.position.y - 4.6f, 11.25f, 9.25f);
-    }
-
-    void GameBorder()
-    {
-        if (transform.position.x > gameBorderRect.xMax) 
-        {
-            transform.position = new Vector2(gameBorderRect.xMax, transform.position.y);
-            velocity.x = 0;
-            rgbd.AddForce(Vector2.left);
-        } 
-        else if (transform.position.x < gameBorderRect.xMin) 
-        {
-            transform.position = new Vector2(gameBorderRect.xMin, transform.position.y);
-            velocity.x = 0;
-            rgbd.AddForce(Vector2.right);
-        }
-        if (transform.position.y > gameBorderRect.yMax) 
-        {
-            transform.position = new Vector2(transform.position.x, gameBorderRect.yMax);
-            velocity.y = 0;
-            rgbd.AddForce(Vector2.down);
-        }
-        else if (transform.position.y < gameBorderRect.yMin) 
-        {
-            transform.position = new Vector2(transform.position.x, gameBorderRect.yMin);
-            velocity.y = 0;
-            rgbd.AddForce(Vector2.up);
-        }
-    }
-
-    public void LoseHealth()
-    {
-        health--;
-        Debug.Log("Player " + player + " Health : " + health);
+		GameObject.Instantiate(explosion, transform.position, transform.rotation);
+		GameObject.Destroy(gameObject);
     }
 }
