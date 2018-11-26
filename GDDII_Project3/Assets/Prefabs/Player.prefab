@@ -70,9 +70,9 @@ GameObject:
   - component: {fileID: 4426609239761852}
   - component: {fileID: 212996912210368156}
   - component: {fileID: 61885577106247444}
+  - component: {fileID: 50258597653644118}
   - component: {fileID: 114704339490709178}
   - component: {fileID: 114679319724846524}
-  - component: {fileID: 50258597653644118}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -146,8 +146,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 500
+  m_LinearDrag: 0.24
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -210,8 +210,10 @@ MonoBehaviour:
   exhausts: {fileID: 1190463232190868}
   maxVel: 0
   maxAcc: 0
-  health: 3
   player: 1
+  bombs: 0
+  health: 3
+  slowed: 0
 --- !u!198 &198111404188247010
 ParticleSystem:
   m_ObjectHideFlags: 1

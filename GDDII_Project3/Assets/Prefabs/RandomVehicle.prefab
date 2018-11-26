@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 114267893718719838}
   m_Layer: 0
   m_Name: RandomVehicle
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,8 +169,8 @@ BoxCollider2D:
   m_Offset: {x: -0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.84, y: 0.72}
+    pivot: {x: 0.4, y: 0.5}
+    oldSize: {x: 1.84, y: 0.67}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   movePattern: 0
   moveSpd: 0.3
   swerveTimer: 0
-  swerveAmount: 1
+  swerveAmount: 1.5
   bombs: 0
   slowed: 0
 --- !u!198 &198616095242201884

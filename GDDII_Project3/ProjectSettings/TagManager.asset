@@ -7,6 +7,7 @@ TagManager:
   - Shop Space
   - SpeedBoost
   - Manager
+  - Enemy
   layers:
   - Default
   - TransparentFX
