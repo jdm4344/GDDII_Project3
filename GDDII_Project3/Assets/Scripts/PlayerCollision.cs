@@ -5,70 +5,101 @@ using UnityEngine.SceneManagement;
 
 public class PlayerCollision : MonoBehaviour {
 
+    // ==== VARIABLES ====
+
+    // ~ Obj & Prefab Refs
     public GameObject manager;
+    public GameObject explosion;
 
+    // ~ Status
     private bool isInvulnerable = false;
-
+    private bool pickedUpPowerup = false;
+    private bool pickedUpItem = false;
+    public bool maxMov;
     private int lives;
-
-    private double timer;
     private double invincibilityTimer;
     private double powerUpTimer1;
-    private double powerUpTimer2;
-    private double powerUpTimer3;
+    private double timer;
+    private float maxVel;
+    
+    //private double powerUpTimer2;
+    //private double powerUpTimer3;
 
     private float invincibilityDuration;
     private float shieldDuration;
 
-    private bool pickedUpBonus = false;
-    private bool pickedUpPowerup = false;
+
+    // ==== METHODS ====
 
     // Initialization
     void Start ()
     {
+        maxMov = false;
         timer = 0;
-        invincibilityTimer = manager.GetComponent<StatManager>().invincibilityTime;;
+        invincibilityTimer = 0;
         invincibilityDuration = manager.GetComponent<StatManager>().invincibilityTime;
         shieldDuration = 2;
         powerUpTimer1 = 0;
-        powerUpTimer2 = 0;
-        powerUpTimer3 = 0;
+        maxVel = manager.GetComponent<StatManager>().maxVelBoost;
+        Debug.Log(maxVel);
+        /*powerUpTimer2 = 0;
+        powerUpTimer3 = 0;*/
     }
 	
 	// Update
-	void FixedUpdate () {
+	void FixedUpdate () 
+    {
+        // ================= Debugging ===================
 
-        /* Debugging for Collision
+        /*
         if (isColliding)
         {
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-        }*/
+        }
+        // */
 
-        lives = manager.GetComponent<ShipPhysics>().health;
+        // ================ Check Lives ==================
+
+        lives = gameObject.GetComponent<CarController>().health;
+
         if (lives == 0)
         {
             manager.GetComponent<StatManager>().SubtractPlayer();
+            GameObject.Instantiate(explosion, transform.position, transform.rotation);
             GameObject.Destroy(gameObject);
         }
+
+        // ================== Movement ===================
+
+        if (GetComponent<CarController>().Velocity.x >= maxVel || GetComponent<CarController>().Velocity.y >= maxVel) 
+        {
+            maxMov = true;
+        }
+        else
+        {
+            maxMov = false;
+        }
+
+        // ================== Timers =====================
 
         timer -= Time.deltaTime;
         invincibilityTimer -= Time.deltaTime;
         powerUpTimer1 -= Time.deltaTime;
-        powerUpTimer2 -= Time.deltaTime;
-        powerUpTimer3 -= Time.deltaTime;
+        
+        // ================== Visuals ====================
 
         // For flashing color for visual effect
         if (timer < 0)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            GetComponent<SpriteRenderer>().color = Color.white;
         }
         else if (timer < invincibilityDuration / 2)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            GetComponent<SpriteRenderer>().color = Color.red;
         }
         else if (timer < invincibilityDuration)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            GetComponent<SpriteRenderer>().color = Color.white;
         }
 
         // Invincibility frames
@@ -77,95 +108,79 @@ public class PlayerCollision : MonoBehaviour {
             isInvulnerable = false;
         }
 
-        if (powerUpTimer1 < 0 && pickedUpBonus)
+        if (powerUpTimer1 < 0 && pickedUpPowerup)
         {
             Debug.Log("Powerup finished");
             // Return everything to defaults
-            gameObject.GetComponent<ShipPhysics>().maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
-            gameObject.GetComponent<ShipPhysics>().maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
-            pickedUpBonus = false;
-        }
+            gameObject.GetComponent<CarController>().maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
+            gameObject.GetComponent<CarController>().maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
+            pickedUpPowerup = false;
+        }/*
         if (powerUpTimer2 < 0 && pickedUpPowerup)
         {
             Debug.Log("Powerup finished");
             // Return everything to defaults
             manager.GetComponent<StatManager>().currentWeapon = "Beam";
             pickedUpPowerup = false;
-        }
-        if (powerUpTimer3 < 0 && pickedUpPowerup)
+        }*/
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        Debug.Log("hit");
+        if (!isInvulnerable) 
         {
-            Debug.Log("Powerup finished");
-            // Return everything to defaults
-            isInvulnerable = false;
+            if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerCollision>().maxMov)
+            {
+                DamageFlash();
+                isInvulnerable = true;
+                invincibilityTimer = invincibilityDuration;
+                GetComponent<CarController>().LoseHealth();
+            }
+            if (col.gameObject.tag == "Spikes")
+            {
+                DamageFlash();
+                isInvulnerable = true;
+                invincibilityTimer = invincibilityDuration;
+                // slow them down
+                GetComponent<CarController>().LoseHealth();
+            }
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D col) 
     {
-        Debug.Log("hit");
-        if ((other.gameObject.tag == "Player") && !isInvulnerable)
-        {
-            Debug.Log("Hit");
-            DamageFlash();
-            isInvulnerable = true;
-            invincibilityTimer = invincibilityDuration;
-            GetComponent<ShipPhysics>().LoseHealth();
-        }
-        else if (other.gameObject.tag == "PulseBeam")
+        if (col.gameObject.tag == "SpeedBoost")
         {
             pickedUpPowerup = true;
-            Debug.Log("Picked Up PulseBeam");
-            ChangeWeapon("PulseBeam");
-        }
-        else if (other.gameObject.tag == "Shield")
-        {
-            Debug.Log("Gained Shield");
-            Shield();
-        }
-        else if (other.gameObject.tag == "SpeedBoost")
-        {
-            pickedUpBonus = true;
             Debug.Log("Gained A Speed Boost");
             SpeedBoost();
         }
-        else if (other.gameObject.tag == "GattlingGun")
+        /*
+        else if (col.otherCollider.gameObject.tag == "Shield")
         {
-            pickedUpPowerup = true;
-            Debug.Log("Picked Up Gattling Gun");
-            ChangeWeapon("GattlingGun");
-        }
+            Debug.Log("Gained Shield");
+            Shield();
+        }*/
     }
 
     void DamageFlash()
     {
+        Debug.Log("Damaged");
         timer = manager.GetComponent<StatManager>().damageFlashTime;
         gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
-
     }
 
     void Shield()
     {
-        powerUpTimer3 = shieldDuration;
+        invincibilityTimer = shieldDuration;
         isInvulnerable = true;
     }
 
     void SpeedBoost()
     {
         powerUpTimer1 = manager.GetComponent<StatManager>().powerUpDuration;
-        gameObject.GetComponent<ShipPhysics>().maxVel = manager.GetComponent<StatManager>().maxVelBoost;
-        gameObject.GetComponent<ShipPhysics>().maxAcc = manager.GetComponent<StatManager>().maxAccBoost;
-    }
-
-    void ChangeWeapon(string nameVar)
-    {
-        if (nameVar == "PulseBeam")
-        {
-            powerUpTimer2 = manager.GetComponent<StatManager>().powerUpDuration * 1.5;
-        }
-        else
-        {
-            powerUpTimer2 = manager.GetComponent<StatManager>().powerUpDuration;
-        }
-        manager.GetComponent<StatManager>().currentWeapon = nameVar;
+        gameObject.GetComponent<CarController>().maxVel = manager.GetComponent<StatManager>().maxVelBoost;
+        gameObject.GetComponent<CarController>().maxAcc = manager.GetComponent<StatManager>().maxAccBoost;
     }
 }
