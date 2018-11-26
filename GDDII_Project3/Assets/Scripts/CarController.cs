@@ -77,11 +77,11 @@ public class CarController : MonoBehaviour {
         // Turning - rotation
         if (joyStickHorizInput < -0.5f)
         {
-            deltaAngle += rotationSpeed; //Left
+            deltaAngle -= rotationSpeed; //Left
         }
         else if (joyStickHorizInput > 0.5f)
         {
-            deltaAngle -= rotationSpeed; //Right
+            deltaAngle += rotationSpeed; //Right
         }
 
         // Gas - acceleration

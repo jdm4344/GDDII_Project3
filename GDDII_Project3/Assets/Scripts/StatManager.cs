@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StatManager : MonoBehaviour {
 
@@ -9,6 +10,9 @@ public class StatManager : MonoBehaviour {
     public int currentPlayers = 4;
     public float gameTimer = 0;
     public string winner;
+
+    // ~ Prefabs
+    public GameObject boost;
 
     // ~ Players
     public float defaultMaxVel = 0.07f;
@@ -44,6 +48,15 @@ public class StatManager : MonoBehaviour {
     void Update()
     {
         // Debug.Log("Players - " + currentPlayers);
+        if (Input.GetKey("r")) 
+        {   
+            Debug.Log("restart");
+            SceneManager.LoadScene("MinigameAsteroids");
+        }
+        if (Input.GetKey("o"))
+        {
+            Instantiate(boost, new Vector3(0, 2, 0), Quaternion.Euler(0, 0, 0));
+        }
 	}
 
     // Control Lives
