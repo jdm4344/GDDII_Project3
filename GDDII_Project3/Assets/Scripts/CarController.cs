@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour
-{
+public class CarController : MonoBehaviour {
+    
     // ==== VARIABLES ====
+
     // ~ Settings
     private Renderer sceneRenderer;
 
     // ~ GameObj Refs
     public StatManager manager;
     public Camera cam;
-    public GameObject thrusters;
+    public GameObject exhausts;
 
     // ~ Input
     private float joyStickHorizInput = 0;
@@ -28,14 +29,15 @@ public class CarController : MonoBehaviour
     public float maxAcc;
 
     // ~ Stats & Effects
-    const float defaultFloatVal = 0.010f;
-    private float currentShipFloat = 0.01f;
     private Rect gameBorderRect;
+    private float currentShipFloat = 0.01f;
+    const float defaultFloatVal = 0.010f;
     public int health = 3;
     public int player; 
 
 
     // ==== PROPERTIES ====
+
     public Vector2 Velocity
     {
         get { return velocity; }
@@ -47,6 +49,7 @@ public class CarController : MonoBehaviour
 
 
     // ==== METHODS ====
+
     void Start()
     {
         sceneRenderer = GetComponentInChildren<Renderer>();
@@ -161,15 +164,14 @@ public class CarController : MonoBehaviour
         position += new Vector2(velocity.x * Mathf.Cos(deltaAngle * Mathf.Deg2Rad), velocity.y * Mathf.Sin(deltaAngle * Mathf.Deg2Rad));
 
         // Set position vector to gameObject transform position
-        //transform.position = position;
         transform.position += new Vector3(velocity.x * Mathf.Cos(deltaAngle * Mathf.Deg2Rad), velocity.y * Mathf.Sin(deltaAngle * Mathf.Deg2Rad));
         
         // =============== Adjust Children ===============
 
         // Alter position
-        thrusters.transform.position = transform.position;
-        thrusters.transform.localPosition = thrusters.transform.localPosition + new Vector3(0.0f, -0.466f);
-        thrusters.transform.rotation = Quaternion.Euler(0, 0, deltaAngle - 90);
+        exhausts.transform.position = transform.position;
+        exhausts.transform.localPosition = exhausts.transform.localPosition + new Vector3(0.0f, -0.466f);
+        exhausts.transform.rotation = Quaternion.Euler(0, 0, deltaAngle - 90);
 
         //gun.transform.position = position;
         //gun.transform.rotation = Quaternion.Euler(0, 0, deltaAngle - 90);

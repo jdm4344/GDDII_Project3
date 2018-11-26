@@ -34,10 +34,9 @@ public class PowerUpScripts : MonoBehaviour
     // Delete
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Destroying power up");
         if (col.gameObject.tag == "Player")
         {
-            Debug.Log("Destroying power up");
+            //Debug.Log("Destroying power up");
             Destroy(gameObject);
         }
     }

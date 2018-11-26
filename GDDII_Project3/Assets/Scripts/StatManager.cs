@@ -30,7 +30,7 @@ public class StatManager : MonoBehaviour {
     public float powerUpDuration = 6;
     // ~~ Speed Boost
     public float maxVelBoost = 0.1f;
-    public float maxAccBoost = 0.07f;
+    public float maxAccBoost = 0.08f;
 
 
     // ===== METHODS =====
