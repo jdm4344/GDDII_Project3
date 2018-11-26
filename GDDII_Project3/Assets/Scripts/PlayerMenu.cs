@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 /*
  * Handles functionality for PlayerMenu Scene
  */
@@ -51,6 +52,7 @@ public class PlayerMenu : MonoBehaviour {
     public void AdvanceMenu()
     {
         menuState++;
+        if(menuState > 1) { SceneManager.LoadScene("MainMenu"); }
     }
 
     public void RetreatMenu()
