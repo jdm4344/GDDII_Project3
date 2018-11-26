@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 /* Authors: Jordan Machalek
  * Contains behavior for main menu functionality
@@ -10,29 +11,47 @@ public class MenuManager : MonoBehaviour {
 
     // Variables
     public GameObject menuPanel;
-    // Minigame specific variables
+    #region Persistent variables
+    [SerializeField]
+    private PlayerManager playerManager;
+    // Each array holds the children 'TurnData', 'FameData', and the 'Text' child of 'TextArea' under the Name1-4 objects
+    public GameObject[] player1Objects;
+    public GameObject[] player2Objects;
+    public GameObject[] player3Objects;
+    public GameObject[] player4Objects;
+    #endregion
+
+    #region Minigame specific variables
     [Header("Minigame Variables")]
     [Space(5)]
-    public GameObject minigamePanel;    
+    public GameObject minigamePanel; // UI Panel obj that is parent of all minigame UI objs
     public List<string> minigames; // List of names of scenes
     private Stack<string> playedMinigames; // Keeps track of minigames that have been played, clears when all have been played once
-    public GameObject iconContainer;
+    private string selectedMinigame; // Minigame chosen in PickMinigame()
+    public GameObject iconContainer; // Gameobject whose children are Image objs displaying minigame names
     [SerializeField]
-    private List<GameObject> icons;
-    public GameObject countdownPopup; // Parent Image with a child Text displaying time before minigame loads
+    private List<GameObject> icons; // List of Image objs 
+    public GameObject countdownPopup; // Parent Image obj with a child Text obj displaying time before minigame loads
     private float timer = 3;
     private bool loadMinigame = false;
+    #endregion
 
-    // Board-space specific variables
+    #region Board-space specific variables
     [Header("Map Variables")]
     [Space(5)]
-    public GameObject mapPanel;    
+    public GameObject mapPanel; // UI Panel obj that is parent of all map UI objs
     public GameObject spaceContainer; // Gameobject whose children are spaces on the board
     [SerializeField]
-    private List<GameObject> spaces;
+    private List<GameObject> spaces; // List of Image objs
+    #endregion
 
-	// Use this for initialization
-	void Start () 
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    // Use this for initialization
+    void Start () 
     {
         // Show and hide panels for redundancy's sake
         menuPanel.SetActive(true);
@@ -53,21 +72,23 @@ public class MenuManager : MonoBehaviour {
         {
             icons.Add(child.gameObject);
         }
+
+        playerManager = GetComponent<PlayerManager>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        // Clear the stack of played minigames if they have all been played
-	    if(playedMinigames.Count == minigames.Count) {playedMinigames.Clear(); }
-
         if(loadMinigame)
         {
             timer -= Time.deltaTime;
             countdownPopup.GetComponentInChildren<Text>().text = "Minigame begins in: " + timer.ToString("F1");
-
-            if (timer <= 0) { SceneManager.LoadScene("MinigameAsteroids"); } // TODO: Change to be dynamic, create string for the selected minigame
+            
+            // Play the selected minigame
+            if (timer <= 0) { SceneManager.LoadScene(selectedMinigame); }
         }
+
+        PlayerUpdate();
     }
 
     /// <summary>
@@ -81,13 +102,18 @@ public class MenuManager : MonoBehaviour {
 
         int gameNum;
 
-        while(true)
+        // Clear the stack of played minigames if they have all been played
+        if (playedMinigames.Count == minigames.Count) { playedMinigames.Clear(); }
+
+        // Pick a minigame that hasn't been played
+        while (true)
         {
             gameNum = Random.Range(0, minigames.Count);
             if(!playedMinigames.Contains(minigames[gameNum])) { break;}
         }
-        
-        playedMinigames.Push(minigames[gameNum]);
+
+        selectedMinigame = minigames[gameNum];
+        playedMinigames.Push(selectedMinigame);
         icons[gameNum].GetComponent<RawImage>().color = Color.red;
         // Show popup and start countdown
         countdownPopup.SetActive(true);
@@ -153,5 +179,17 @@ public class MenuManager : MonoBehaviour {
         {
             icon.GetComponent<RawImage>().color = Color.white;
         }
+    }
+
+    /// <summary>
+    /// Updates player names in PlayerManager.cs based on input fields
+    /// </summary>
+    public void PlayerUpdate()
+    {
+        // Update Player names
+        playerManager.playerNames[0] = player1Objects[2].GetComponent<TextMeshProUGUI>().text;
+        playerManager.playerNames[1] = player2Objects[2].GetComponent<TextMeshProUGUI>().text;
+        playerManager.playerNames[2] = player3Objects[2].GetComponent<TextMeshProUGUI>().text;
+        playerManager.playerNames[3] = player4Objects[2].GetComponent<TextMeshProUGUI>().text;
     }
 }

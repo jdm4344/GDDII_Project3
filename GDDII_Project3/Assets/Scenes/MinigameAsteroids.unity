@@ -1215,6 +1215,7 @@ GameObject:
   - component: {fileID: 2062017436}
   - component: {fileID: 2062017437}
   - component: {fileID: 2062017435}
+  - component: {fileID: 2062017437}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1268,6 +1269,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2062017434}
+<<<<<<< HEAD
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3456c48e9848afb409feb2fbe797c672, type: 3}
@@ -1275,6 +1277,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
   camMovementSpd: 0.5
+=======
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1323fe97d3f4774d82d64a59002ec19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNames: []
+  playerScore: 
+  playerCurrency: 
+>>>>>>> 9110d8abed6f3c55113b8e70475b6b6ba27298f0
 --- !u!1 &2141293997
 GameObject:
   m_ObjectHideFlags: 0
