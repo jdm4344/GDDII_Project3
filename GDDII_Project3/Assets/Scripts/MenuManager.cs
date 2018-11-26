@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 /* Authors: Jordan Machalek
  * Contains behavior for main menu functionality
@@ -10,7 +11,17 @@ public class MenuManager : MonoBehaviour {
 
     // Variables
     public GameObject menuPanel;
-    // Minigame specific variables
+    #region Persistent variables
+    [SerializeField]
+    private PlayerManager playerManager;
+    // Each array holds the children 'TurnData', 'FameData', and the 'Text' child of 'TextArea' under the Name1-4 objects
+    public GameObject[] player1Objects;
+    public GameObject[] player2Objects;
+    public GameObject[] player3Objects;
+    public GameObject[] player4Objects;
+    #endregion
+
+    #region Minigame specific variables
     [Header("Minigame Variables")]
     [Space(5)]
     public GameObject minigamePanel; // UI Panel obj that is parent of all minigame UI objs
@@ -23,17 +34,24 @@ public class MenuManager : MonoBehaviour {
     public GameObject countdownPopup; // Parent Image obj with a child Text obj displaying time before minigame loads
     private float timer = 3;
     private bool loadMinigame = false;
+    #endregion
 
-    // Board-space specific variables
+    #region Board-space specific variables
     [Header("Map Variables")]
     [Space(5)]
     public GameObject mapPanel; // UI Panel obj that is parent of all map UI objs
     public GameObject spaceContainer; // Gameobject whose children are spaces on the board
     [SerializeField]
     private List<GameObject> spaces; // List of Image objs
+    #endregion
 
-	// Use this for initialization
-	void Start () 
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    // Use this for initialization
+    void Start () 
     {
         // Show and hide panels for redundancy's sake
         menuPanel.SetActive(true);
@@ -54,6 +72,8 @@ public class MenuManager : MonoBehaviour {
         {
             icons.Add(child.gameObject);
         }
+
+        playerManager = GetComponent<PlayerManager>();
 	}
 	
 	// Update is called once per frame
@@ -67,6 +87,8 @@ public class MenuManager : MonoBehaviour {
             // Play the selected minigame
             if (timer <= 0) { SceneManager.LoadScene(selectedMinigame); }
         }
+
+        PlayerUpdate();
     }
 
     /// <summary>
@@ -157,5 +179,17 @@ public class MenuManager : MonoBehaviour {
         {
             icon.GetComponent<RawImage>().color = Color.white;
         }
+    }
+
+    /// <summary>
+    /// Updates player names in PlayerManager.cs based on input fields
+    /// </summary>
+    public void PlayerUpdate()
+    {
+        // Update Player names
+        playerManager.playerNames[0] = player1Objects[2].GetComponent<TextMeshProUGUI>().text;
+        playerManager.playerNames[1] = player2Objects[2].GetComponent<TextMeshProUGUI>().text;
+        playerManager.playerNames[2] = player3Objects[2].GetComponent<TextMeshProUGUI>().text;
+        playerManager.playerNames[3] = player4Objects[2].GetComponent<TextMeshProUGUI>().text;
     }
 }
