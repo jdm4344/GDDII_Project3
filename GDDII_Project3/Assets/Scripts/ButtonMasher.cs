@@ -11,14 +11,10 @@ public class ButtonMasher : MonoBehaviour {
     public string[] playerNames;
 
     // keep track of how many times the players have hit the buttons
-<<<<<<< HEAD
-    int[] buttonPresses = new int[4];
-=======
     public int[] buttonPresses;
 
     // percentage complete
     public int[] percentages;
->>>>>>> 290572606993c33b148926ad8648073f2687fc3c
 
     // how many to win?
     public const int pressesToWin = 100;
@@ -43,12 +39,6 @@ public class ButtonMasher : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-<<<<<<< HEAD
-        // p1ButtonPresses = 0;
-        // p2ButtonPresses = 0;
-        // p3ButtonPresses = 0;
-        // p4ButtonPresses = 0;
-=======
         // how many players are playing?
         numOfPlayers = playerManager.playerNames.Length;
         // setup
@@ -61,7 +51,6 @@ public class ButtonMasher : MonoBehaviour {
         {
             playerNames[i] = playerManager.playerNames[i];
         }
->>>>>>> 290572606993c33b148926ad8648073f2687fc3c
     }
 	
 	// Update is called once per frame
