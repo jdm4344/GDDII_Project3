@@ -12,6 +12,7 @@ public class MenuManager : MonoBehaviour {
     // Variables
     public GameObject menuPanel;
     #region Persistent variables
+    private bool onMenu;
     [SerializeField]
     private PlayerManager playerManager;
     // Each array holds the children 'TurnData', 'FameData', and the 'Text' child of 'TextArea' under the Name1-4 objects
@@ -74,6 +75,7 @@ public class MenuManager : MonoBehaviour {
         }
 
         playerManager = GetComponent<PlayerManager>();
+        onMenu = true;
 	}
 	
 	// Update is called once per frame
@@ -85,10 +87,18 @@ public class MenuManager : MonoBehaviour {
             countdownPopup.GetComponentInChildren<Text>().text = "Minigame begins in: " + timer.ToString("F1");
             
             // Play the selected minigame
-            if (timer <= 0) { SceneManager.LoadScene(selectedMinigame); }
+            if (timer <= 0)
+            {
+                onMenu = false;
+                loadMinigame = false;
+                SceneManager.LoadScene(selectedMinigame);
+            }
         }
 
-        PlayerUpdate();
+        if (onMenu)
+        {
+            PlayerUpdate();
+        }
     }
 
     /// <summary>

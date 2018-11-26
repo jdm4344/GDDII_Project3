@@ -1154,7 +1154,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 258
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1961,7 +1961,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 258
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -6253,7 +6253,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 258
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -9878,10 +9878,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuPanel: {fileID: 1208833882}
   playerManager: {fileID: 0}
-  player1Input: {fileID: 0}
-  player2Input: {fileID: 0}
-  player3Input: {fileID: 0}
-  player4Input: {fileID: 0}
   player1Objects:
   - {fileID: 1759940115}
   - {fileID: 1410118775}
@@ -9932,8 +9928,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNames: []
-  playerScore: 
   playerFame: 
+  turnOrder: 
 --- !u!1 &1553013199
 GameObject:
   m_ObjectHideFlags: 0
