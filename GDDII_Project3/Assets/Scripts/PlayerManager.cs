@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 /*
  * Tracks player names, score and currency between scenes
  */
@@ -8,11 +9,8 @@ public class PlayerManager : MonoBehaviour {
 
     // Variables
     public string[] playerNames;
-    [SerializeField]
-    private int[] playerScore;
-    [SerializeField]
-    private int[] playerFame;
-
+    public int[] playerFame;
+    public int[] turnOrder;
 
     void Awake()
     {
@@ -23,13 +21,14 @@ public class PlayerManager : MonoBehaviour {
 	void Start ()
     {
         playerNames = new string[4];
-        playerScore = new int[4];
         playerFame = new int[4];
-	}
-	
-	// Update is called once per frame
-	void Update ()
+        turnOrder = new int[4];
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
 		
 	}
+
 }
