@@ -9772,7 +9772,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Not Asteroids
+  m_Text: Button Masher
 --- !u!222 &1543292348
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9896,6 +9896,7 @@ MonoBehaviour:
   minigamePanel: {fileID: 561178888}
   minigames:
   - MinigameAsteroids
+  - MinigameButtonMash
   iconContainer: {fileID: 1658586129}
   icons: []
   countdownPopup: {fileID: 351578982}
