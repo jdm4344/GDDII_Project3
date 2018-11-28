@@ -140,6 +140,11 @@ public class GameManagerScript : MonoBehaviour {
             infoScreens[5].SetActive(true);
             infoScreens[6].GetComponent<Text>().text = "P" + GameObject.FindGameObjectWithTag("Player").GetComponent<CarController>().player + " Wins";
             Time.timeScale = 0;
+
+            if (Input.GetKeyDown("m")) 
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
         }
 
         // Spawning
@@ -148,7 +153,7 @@ public class GameManagerScript : MonoBehaviour {
             // Spawn normal vehicles
             if (spawnNormTimer > 5) 
             {
-                GameObject obj = Instantiate(Vehicles, new Vector3(10, Random.Range(-3, 3)), Quaternion.Euler(0, 0, 180));
+                GameObject obj = Instantiate(Vehicles, new Vector3(10, Random.Range(-2.0f, 5)), Quaternion.Euler(0, 0, 180));
                 obj.GetComponent<VehicleScript>().movePattern = MovePattern.Straight;
                 spawnNormTimer = 0;
             }
@@ -160,14 +165,14 @@ public class GameManagerScript : MonoBehaviour {
             }
             if (spawnBomberTimer > 10) 
             {
-                GameObject obj = Instantiate(Vehicles, new Vector3(Random.Range(-3, 3), 7), Quaternion.Euler(0, 0, -90));
+                GameObject obj = Instantiate(Vehicles, new Vector3(Random.Range(-3.0f, 5), 7), Quaternion.Euler(0, 0, -90));
                 obj.GetComponent<VehicleScript>().movePattern = MovePattern.BombDropper;
                 spawnBomberTimer = 0;
             }
             // Spawn boosts
             if (boostSpawnTimer > 3)
             {
-                GameObject obj = Instantiate(boost, new Vector3(Random.Range(-3, 3), Random.Range(-2, 2)), Quaternion.Euler(0, 0, 0));
+                GameObject obj = Instantiate(boost, new Vector3(Random.Range(-3.0f, 3), Random.Range(-2.0f, 4)), Quaternion.Euler(0, 0, 0));
                 boostSpawnTimer = 0;
             }
         }
