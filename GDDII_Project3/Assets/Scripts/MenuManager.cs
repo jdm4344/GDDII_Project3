@@ -83,6 +83,8 @@ public class MenuManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
+        Time.timeScale = 1;
+
         if(loadMinigame)
         {
             timer -= Time.deltaTime;

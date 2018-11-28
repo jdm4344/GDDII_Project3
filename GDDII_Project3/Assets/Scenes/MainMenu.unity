@@ -10627,7 +10627,6 @@ MonoBehaviour:
   minigamePanel: {fileID: 561178888}
   minigames:
   - MinigameAsteroids
-  - MinigameButtonMash
   iconContainer: {fileID: 1658586129}
   icons: []
   countdownPopup: {fileID: 351578982}
