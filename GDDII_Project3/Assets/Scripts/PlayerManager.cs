@@ -20,9 +20,7 @@ public class PlayerManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        playerNames = new string[4];
-        playerFame = new int[4];
-        turnOrder = new int[4];
+        
     }
 
     // Update is called once per frame

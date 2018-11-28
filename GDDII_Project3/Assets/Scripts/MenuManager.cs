@@ -94,11 +94,6 @@ public class MenuManager : MonoBehaviour {
                 SceneManager.LoadScene(selectedMinigame);
             }
         }
-
-        if (onMenu)
-        {
-            PlayerUpdate();
-        }
     }
 
     /// <summary>
@@ -192,14 +187,14 @@ public class MenuManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Updates player names in PlayerManager.cs based on input fields
+    /// Sets player names from PlayerManager.cs
     /// </summary>
-    public void PlayerUpdate()
+    public void SetPlayers()
     {
         // Update Player names
-        playerManager.playerNames[0] = player1Objects[2].GetComponent<TextMeshProUGUI>().text;
-        playerManager.playerNames[1] = player2Objects[2].GetComponent<TextMeshProUGUI>().text;
-        playerManager.playerNames[2] = player3Objects[2].GetComponent<TextMeshProUGUI>().text;
-        playerManager.playerNames[3] = player4Objects[2].GetComponent<TextMeshProUGUI>().text;
+        player1Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[0];
+        player2Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[1];
+        player3Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[2];
+        player4Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[3];
     }
 }
