@@ -2,15 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum MovePattern
+{
+	Straight = 0,
+	Swerve = 1,
+	Kamikaze = 2,
+	AreaBomber = 3,
+	BombDropper = 4,
+}
+
+
 public class VehicleScript : MonoBehaviour 
 {
 	// ==== VARIABLES ====
 
 	// ~ GameObj Refs
-    public StatManager manager;
+    public GameManagerScript manager;
     public Camera cam;
     public GameObject exhausts;
     public GameObject explosion;
+	public GameObject mine;
 
 	// ~ Physics
     private Vector2 position;
@@ -28,21 +40,14 @@ public class VehicleScript : MonoBehaviour
     
     // ~ Stats & Effects
 	public MovePattern movePattern = MovePattern.Straight;
+	public float maxLifeTime = 7.0f;
 	public float moveSpd = 0.5f; // Acts as input
 	public float swerveTimer;
 	public float swerveAmount = 1.0f;
+	public float dropTimer;
+	public float dropDelay = 1.0f;
     public int bombs = 0;
     public bool slowed;
-
-	// ==== ENUMS ====
-	
-	public enum MovePattern
-	{
-		Straight = 0,
-		Swerve = 1,
-		Kamikaze = 2,
-		AreaBomber = 3
-	}
 
 
     // ==== PROPERTIES ====
@@ -61,11 +66,11 @@ public class VehicleScript : MonoBehaviour
 
 	void Awake () 
 	{
-		manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<StatManager>();
+		manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManagerScript>();
 		cam = Camera.FindObjectOfType<Camera>();
 
-        maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
-        maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
+        maxVel = manager.GetComponent<GameManagerScript>().defaultMaxVel;
+        maxAcc = manager.GetComponent<GameManagerScript>().defaultMaxAcc;
 
         position = transform.position;
         velocity = Vector2.zero;
@@ -73,10 +78,20 @@ public class VehicleScript : MonoBehaviour
         deltaAngle = transform.rotation.eulerAngles.z;
 
 		swerveTimer = 0;
+		dropTimer = dropDelay;
 	}
 	
 	void FixedUpdate () 
 	{
+		// ================= Lifetime ====================
+
+		maxLifeTime -= Time.deltaTime;
+		if (maxLifeTime <= 0)
+		{
+			Instantiate(explosion, transform.position, transform.rotation);
+			Destroy(gameObject);
+		}
+
 		// ================= Movement ====================
 
 		// Determines specific physics calculations based on movement pattern
@@ -99,6 +114,18 @@ public class VehicleScript : MonoBehaviour
 				break;
 
 			case MovePattern.Kamikaze:
+				break;
+
+			case MovePattern.BombDropper:
+				// Periodically drop bombs while moving in a straight line
+				dropTimer -= Time.deltaTime;
+				moveSpd = 0.4f;
+				if (dropTimer <= 0)
+				{
+					Debug.Log("Drop");
+					Instantiate(mine, transform.position - (transform.right * 1.25f), transform.rotation);
+					dropTimer = dropDelay;
+				}
 				break;
 
 			case MovePattern.AreaBomber:
@@ -203,7 +230,7 @@ public class VehicleScript : MonoBehaviour
 
 	void OnCollisionEnter2D(Collision2D col)
     {
-		GameObject.Instantiate(explosion, transform.position, transform.rotation);
-		GameObject.Destroy(gameObject);
+		Instantiate(explosion, transform.position, transform.rotation);
+		Destroy(gameObject);
     }
 }

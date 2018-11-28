@@ -99,7 +99,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1903036774783606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.3301485, y: 1.1624447, z: 0}
+  m_LocalPosition: {x: -8.686014, y: -0.97271407, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4388242184138530}
@@ -194,12 +194,16 @@ MonoBehaviour:
   cam: {fileID: 0}
   exhausts: {fileID: 1778248923061088}
   explosion: {fileID: 1102209521942138, guid: 6443aaa3f9f4a544ba7915abd3036199, type: 2}
+  mine: {fileID: 1092196330470846, guid: bee706a34801a4248bf34330b706a69f, type: 2}
   maxVel: 0
   maxAcc: 0
   movePattern: 0
-  moveSpd: 0.3
+  maxLifeTime: 7
+  moveSpd: 0.5
   swerveTimer: 0
-  swerveAmount: 1.5
+  swerveAmount: 0.75
+  dropTimer: 0
+  dropDelay: 1
   bombs: 0
   slowed: 0
 --- !u!198 &198616095242201884
@@ -9416,7 +9420,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1607250647
   m_SortingLayer: -2
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 284451440a6a4df4a87858fa2ea755b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

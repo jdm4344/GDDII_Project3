@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1424006866757406}
+  m_IsPrefabAsset: 1
+--- !u!1 &1424006866757406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4950376454340494}
+  - component: {fileID: 114510332577055702}
+  - component: {fileID: 114265530379844122}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Manager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4950376454340494
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424006866757406}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3019254, y: -0.032682437, z: 0.047818806}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114265530379844122
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424006866757406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde7557de7d8bf2468c367295cf5d1a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testMode: 1
+  currentPlayers: 4
+  gameTimer: 0
+  winner: 
+  infoScreens:
+  - {fileID: 1312387098352872, guid: 28c1c279d3245074f84f907205412269, type: 2}
+  - {fileID: 1006195408033408, guid: c4ff521e13b729348bc8ad55b3fc7f35, type: 2}
+  - {fileID: 1192752693285952, guid: 7400d2201bb6df14d80e0af9d245ece0, type: 2}
+  - {fileID: 1192752693285952, guid: f1499b9487476a649be4234733cf2454, type: 2}
+  - {fileID: 1192752693285952, guid: c35d2474eac9d3a4ea7e38fae504cd18, type: 2}
+  boost: {fileID: 1001749682530700, guid: 483e7206f31a25942a2ced087784708b, type: 2}
+  defaultMaxVel: 0.07
+  defaultMaxAcc: 0.07
+  invincibilityTime: 1.5
+  currentWeapon: Beam
+  defaultAsteroidSpeed: 0.02
+  damageFlashTime: 0.05
+  asteroidScoreBonus: 10
+  asteroidHitPoints: 2
+  defaultBulletSpeed: 0.5
+  bulletLifeTime: 2.5
+  powerUpDuration: 6
+  maxVelBoost: 0.1
+  maxAccBoost: 0.08
+--- !u!114 &114510332577055702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424006866757406}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3456c48e9848afb409feb2fbe797c672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  camMovementSpd: 0.5

@@ -10,13 +10,17 @@ public class CarController : MonoBehaviour {
     private Renderer sceneRenderer;
 
     // ~ GameObj Refs
-    public StatManager manager;
+    public GameManagerScript manager;
     public Camera cam;
     public GameObject exhausts;
+    public GameObject mine;
 
     // ~ Input
+    private bool singlePress = false;
     private float joyStickHorizInput = 0;
     private float triggerInput = 0;
+    
+    private float inputDelay = 0;
 
     // ~ Physics
     private Rigidbody2D rgbd;
@@ -36,7 +40,8 @@ public class CarController : MonoBehaviour {
     public int player;
     
     // ~ Stats & Effects
-    public int bombs = 0;
+    public int mines;
+    public int boosts;
     public int health = 3;
     public bool slowed;
     
@@ -55,19 +60,22 @@ public class CarController : MonoBehaviour {
 
     // ==== METHODS ====
 
-    void Start()
+    void Awake()
     {
         sceneRenderer = GetComponentInChildren<Renderer>();
         gameBorderRect = new Rect(cam.transform.position.x - 5.75f, cam.transform.position.y - 4.6f, 11.25f, 9.25f);
         rgbd = GetComponent<Rigidbody2D>();
 
-        maxVel = manager.GetComponent<StatManager>().defaultMaxVel;
-        maxAcc = manager.GetComponent<StatManager>().defaultMaxAcc;
+        maxVel = manager.GetComponent<GameManagerScript>().defaultMaxVel;
+        maxAcc = manager.GetComponent<GameManagerScript>().defaultMaxAcc;
 
         position = transform.position;
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
         deltaAngle = transform.rotation.eulerAngles.z + 90;
+
+        mines = 0;
+        boosts = 1;
     }
 
     void FixedUpdate()
@@ -185,6 +193,20 @@ public class CarController : MonoBehaviour {
         // Handle Input
         joyStickHorizInput = Input.GetAxis("J" + player + "Horizontal");
         triggerInput = Input.GetAxis("J" + player + "Triggers");
+        inputDelay += Time.deltaTime;
+        
+        if (Input.GetButton(player + "A") && boosts > 0 && !singlePress)
+        {
+            singlePress = true;
+            Debug.Log("Boost");
+            GetComponent<PlayerCollision>().SpeedBoost();
+            inputDelay = 0;
+        }
+        
+        if (inputDelay > 2.0f)
+        {
+            singlePress = false;
+        }
 
         // Move Boundaries
         gameBorderRect = new Rect(cam.transform.position.x - 5.75f, cam.transform.position.y - 4.6f, 11.25f, 9.25f);
