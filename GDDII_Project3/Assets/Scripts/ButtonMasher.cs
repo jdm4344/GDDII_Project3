@@ -62,12 +62,19 @@ public class ButtonMasher : MonoBehaviour {
             ButtonPressed();
 
             // check for a win
-            winner = CheckWinCondition() - 1;
+            winner = CheckWinCondition();
+            
+        }
+	}
 
+    void OnGUI()
+    {
+        if (!gameOver)
+        {
             DisplayPercentage();
         }
         DisplayWinner();
-	}
+    }
 
     // show the winner
     void DisplayWinner()
