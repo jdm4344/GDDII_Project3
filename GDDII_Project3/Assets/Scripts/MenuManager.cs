@@ -76,6 +76,8 @@ public class MenuManager : MonoBehaviour {
 
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
         onMenu = true;
+
+        SetPlayers();
 	}
 	
 	// Update is called once per frame

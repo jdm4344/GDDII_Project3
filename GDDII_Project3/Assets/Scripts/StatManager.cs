@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class StatManager : MonoBehaviour {
 
     // ==== VARIABLES ====
+    [SerializeField]
+    private PlayerManager playerManager;
     // ~ Game
     public bool testMode = true;
     public int currentPlayers = 4;
@@ -42,7 +44,9 @@ public class StatManager : MonoBehaviour {
     // Initialization
     void Start ()
     {
-        currentPlayers = 4;
+        playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+
+        currentPlayers = playerManager.playerNames.Length;
     }
 
     // Update is called once per frame

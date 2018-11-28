@@ -113,7 +113,7 @@ public class PlayerMenu : MonoBehaviour {
     public void AdvanceMenu()
     {
         menuState++;
-        if(menuState > 1) { SceneManager.LoadScene("MainMenu"); }
+        if(menuState > 1 && playerManager.playerNames.Length > 0) { SceneManager.LoadScene("MainMenu"); }
     }
 
     // Decrement menu state
