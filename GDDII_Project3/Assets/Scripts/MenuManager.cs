@@ -11,6 +11,8 @@ public class MenuManager : MonoBehaviour {
 
     // Variables
     public GameObject menuPanel;
+    public GameObject playerCardTemplate; // template for player card objects
+    public GameObject[] playerCards; // array of created player cards
     #region Persistent variables
     private bool onMenu;
     [SerializeField]
@@ -46,10 +48,10 @@ public class MenuManager : MonoBehaviour {
     private List<GameObject> spaces; // List of Image objs
     #endregion
 
-    //void Awake()
-    //{
-    //    DontDestroyOnLoad(this.gameObject);
-    //}
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
 
     // Use this for initialization
     void Start () 
@@ -77,7 +79,7 @@ public class MenuManager : MonoBehaviour {
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
         onMenu = true;
 
-        SetPlayers();
+        GeneratePlayerCards();
 	}
 	
 	// Update is called once per frame
@@ -205,19 +207,42 @@ public class MenuManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sets player names from PlayerManager.cs
+    /// Creates UI elements displaying player data and names
     /// </summary>
-    public void SetPlayers()
+    public void GeneratePlayerCards()
     {
+        // BASIC CODE - Working
         // Update Player names
-        player1Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[0];
-        player2Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[1];
-        player3Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[2];
-        player4Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[3];
+        //player1Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[0];
+        //player2Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[1];
+        //player3Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[2];
+        //player4Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[3];
+
+        // DYNAMIC CODE - In Progress
+        int numPlayers = playerManager.playerNames.Length;
+        playerCards = new GameObject[numPlayers];
+
+        Vector3 startPos = new Vector3(-(100*numPlayers), -10, 0);
+        GameObject canvas = GameObject.Find("Canvas");
 
         for (int i = 0; i < playerManager.playerNames.Length; i++)
         {
+            // Create card object
+            GameObject temp = Instantiate(playerCardTemplate);
+            temp.transform.SetParent(canvas.transform);
 
+            // Set the player's name
+            temp.GetComponent<TMP_InputField>().text = playerManager.playerNames[i];
+
+            // Set position
+            temp.GetComponent<RectTransform>().localPosition = startPos;
+            // Template is not active, so set active - doing this may be redundant
+            temp.SetActive(true);
+            // Save the card
+            playerCards[i] = temp;
+
+            // Increment position
+            startPos = new Vector3(startPos.x + (100 + (25*numPlayers)), -10, 0);
         }
     }
 
