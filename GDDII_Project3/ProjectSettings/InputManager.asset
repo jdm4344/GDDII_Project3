@@ -33,7 +33,7 @@ InputManager:
     dead: 0.001
     sensitivity: 3
     snap: 0
-    invert: 0
+    invert: 1
     type: 2
     axis: 0
     joyNum: 2
@@ -49,7 +49,7 @@ InputManager:
     dead: 0.001
     sensitivity: 3
     snap: 0
-    invert: 0
+    invert: 1
     type: 2
     axis: 0
     joyNum: 3
@@ -65,7 +65,7 @@ InputManager:
     dead: 0.001
     sensitivity: 3
     snap: 0
-    invert: 0
+    invert: 1
     type: 2
     axis: 0
     joyNum: 4
@@ -227,8 +227,8 @@ InputManager:
     snap: 0
     invert: 1
     type: 2
-    axis: 1
-    joyNum: 3
+    axis: 2
+    joyNum: 2
   - serializedVersion: 3
     m_Name: J3Triggers
     descriptiveName: 
@@ -243,7 +243,7 @@ InputManager:
     snap: 0
     invert: 1
     type: 2
-    axis: 1
+    axis: 2
     joyNum: 3
   - serializedVersion: 3
     m_Name: J4Triggers
@@ -259,8 +259,8 @@ InputManager:
     snap: 0
     invert: 1
     type: 2
-    axis: 1
-    joyNum: 3
+    axis: 2
+    joyNum: 4
   - serializedVersion: 3
     m_Name: 1A
     descriptiveName: A button for player 1

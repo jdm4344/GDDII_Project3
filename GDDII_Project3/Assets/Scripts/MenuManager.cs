@@ -77,7 +77,7 @@ public class MenuManager : MonoBehaviour {
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
         onMenu = true;
 
-        //SetPlayers();
+        SetPlayers();
 	}
 	
 	// Update is called once per frame
@@ -100,18 +100,18 @@ public class MenuManager : MonoBehaviour {
         }
 
         //Set current player fame to display
-        if(menuPanel.activeInHierarchy)
-        {
-            TextMeshProUGUI fame1 = player1Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
-            TextMeshProUGUI fame2 = player2Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
-            TextMeshProUGUI fame3 = player3Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
-            TextMeshProUGUI fame4 = player4Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
+        //if(menuPanel.activeInHierarchy)
+        //{
+        //    TextMeshProUGUI fame1 = player1Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
+        //    TextMeshProUGUI fame2 = player2Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
+        //    TextMeshProUGUI fame3 = player3Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
+        //    TextMeshProUGUI fame4 = player4Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
 
-            fame1.text = playerManager.player1fame.ToString();
-            fame2.text = playerManager.player2fame.ToString();
-            fame3.text = playerManager.player3fame.ToString();
-            fame4.text = playerManager.player4fame.ToString();
-        }
+        //    fame1.text = playerManager.player1fame.ToString();
+        //    fame2.text = playerManager.player2fame.ToString();
+        //    fame3.text = playerManager.player3fame.ToString();
+        //    fame4.text = playerManager.player4fame.ToString();
+        //}
     }
 
     /// <summary>
@@ -214,83 +214,90 @@ public class MenuManager : MonoBehaviour {
         player2Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[1];
         player3Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[2];
         player4Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[3];
+
+        for (int i = 0; i < playerManager.playerNames.Length; i++)
+        {
+
+        }
     }
 
+    #region Temp Score Code
     /// <summary>
     /// Purchase stuff with the shop button
     /// </summary>
-    public void Purchase()
-    {
-        string coststr = GameObject.Find("costValue").GetComponent<TextMeshProUGUI>().text;
-        int cost;
-        int.TryParse(coststr, out cost);
+    //public void Purchase()
+    //{
+    //    string coststr = GameObject.Find("costValue").GetComponent<TextMeshProUGUI>().text;
+    //    int cost;
+    //    int.TryParse(coststr, out cost);
 
-        string playerstr = GameObject.Find("playerValue").GetComponent<TextMeshProUGUI>().text;
-        int player;
-        int.TryParse(playerstr, out player);
-
-
-        if (player == 1)
-            playerManager.player1fame -= cost;
-        else if (player == 2)
-            playerManager.player2fame -= cost;
-        else if (player == 3)
-            playerManager.player3fame -= cost;
-        else if (player == 4)
-            playerManager.player4fame -= cost;
-
-    }
-
-    /// <summary>
-    /// Purchase stuff with the checkpoint button
-    /// </summary>
-    public void PurchaseCheck()
-    {
-        string playerstrCheck = GameObject.Find("playerValueCheck").GetComponent<TextMeshProUGUI>().text;
-        int playerCheck;
-        int.TryParse(playerstrCheck, out playerCheck);
+    //    string playerstr = GameObject.Find("playerValue").GetComponent<TextMeshProUGUI>().text;
+    //    int player;
+    //    int.TryParse(playerstr, out player);
 
 
-        if (playerCheck == 1)
-            playerManager.player1fame -= 10;
-        else if (playerCheck == 2)
-            playerManager.player2fame -= 10;
-        else if (playerCheck == 3)
-            playerManager.player3fame -= 10;
-        else if (playerCheck == 4)
-            playerManager.player4fame -= 10;
+    //    if (player == 1)
+    //        playerManager.player1fame -= cost;
+    //    else if (player == 2)
+    //        playerManager.player2fame -= cost;
+    //    else if (player == 3)
+    //        playerManager.player3fame -= cost;
+    //    else if (player == 4)
+    //        playerManager.player4fame -= cost;
 
-    }
+    //}
 
-    /// <summary>
-    /// Add Fame to player 1
-    /// </summary>
-    public void AddFame1()
-    {
-        playerManager.player1fame++;
-    }
+    ///// <summary>
+    ///// Purchase stuff with the checkpoint button
+    ///// </summary>
+    //public void PurchaseCheck()
+    //{
+    //    string playerstrCheck = GameObject.Find("playerValueCheck").GetComponent<TextMeshProUGUI>().text;
+    //    int playerCheck;
+    //    int.TryParse(playerstrCheck, out playerCheck);
 
-    /// <summary>
-    /// Add Fame to player 2
-    /// </summary>
-    public void AddFame2()
-    {
-        playerManager.player2fame++;
-    }
 
-    /// <summary>
-    /// Add Fame to player 3
-    /// </summary>
-    public void AddFame3()
-    {
-        playerManager.player3fame++;
-    }
+    //    if (playerCheck == 1)
+    //        playerManager.player1fame -= 10;
+    //    else if (playerCheck == 2)
+    //        playerManager.player2fame -= 10;
+    //    else if (playerCheck == 3)
+    //        playerManager.player3fame -= 10;
+    //    else if (playerCheck == 4)
+    //        playerManager.player4fame -= 10;
 
-    /// <summary>
-    /// Add Fame to player 1
-    /// </summary>
-    public void AddFame4()
-    {
-        playerManager.player4fame++;
-    }
+    //}
+
+    ///// <summary>
+    ///// Add Fame to player 1
+    ///// </summary>
+    //public void AddFame1()
+    //{
+    //    playerManager.player1fame++;
+    //}
+
+    ///// <summary>
+    ///// Add Fame to player 2
+    ///// </summary>
+    //public void AddFame2()
+    //{
+    //    playerManager.player2fame++;
+    //}
+
+    ///// <summary>
+    ///// Add Fame to player 3
+    ///// </summary>
+    //public void AddFame3()
+    //{
+    //    playerManager.player3fame++;
+    //}
+
+    ///// <summary>
+    ///// Add Fame to player 1
+    ///// </summary>
+    //public void AddFame4()
+    //{
+    //    playerManager.player4fame++;
+    //}
+    #endregion
 }
