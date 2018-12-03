@@ -17,11 +17,6 @@ public class MenuManager : MonoBehaviour {
     private bool onMenu;
     [SerializeField]
     private PlayerManager playerManager;
-    // Each array holds the children 'TurnData', 'FameData', and the 'Text' child of 'TextArea' under the Name1-4 objects
-    public GameObject[] player1Objects;
-    public GameObject[] player2Objects;
-    public GameObject[] player3Objects;
-    public GameObject[] player4Objects;
     #endregion
 
     #region Minigame specific variables
@@ -48,10 +43,10 @@ public class MenuManager : MonoBehaviour {
     private List<GameObject> spaces; // List of Image objs
     #endregion
 
-    void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
+    //void Awake()
+    //{
+    //    DontDestroyOnLoad(this.gameObject);
+    //}
 
     // Use this for initialization
     void Start () 
@@ -229,7 +224,7 @@ public class MenuManager : MonoBehaviour {
         {
             // Create card object
             GameObject temp = Instantiate(playerCardTemplate);
-            temp.transform.SetParent(canvas.transform);
+            temp.transform.SetParent(menuPanel.transform);
 
             // Set the player's name
             temp.GetComponent<TMP_InputField>().text = playerManager.playerNames[i];

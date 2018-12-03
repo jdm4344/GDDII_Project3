@@ -7418,7 +7418,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1011255213}
   m_TextViewport: {fileID: 1041619234}
   m_TextComponent: {fileID: 130243849}
@@ -11717,25 +11717,10 @@ MonoBehaviour:
   playerCardTemplate: {fileID: 1011255210}
   playerCards: []
   playerManager: {fileID: 0}
-  player1Objects:
-  - {fileID: 1759940115}
-  - {fileID: 1410118775}
-  - {fileID: 412286068}
-  player2Objects:
-  - {fileID: 176713649}
-  - {fileID: 538418677}
-  - {fileID: 1386910719}
-  player3Objects:
-  - {fileID: 1342449615}
-  - {fileID: 2046161700}
-  - {fileID: 1995778469}
-  player4Objects:
-  - {fileID: 1642693786}
-  - {fileID: 973364090}
-  - {fileID: 2129943850}
   minigamePanel: {fileID: 561178888}
   minigames:
   - MinigameAsteroids
+  - MinigameButtonMash
   iconContainer: {fileID: 1658586129}
   icons: []
   countdownPopup: {fileID: 351578982}
