@@ -222,7 +222,7 @@ public class MenuManager : MonoBehaviour {
         int numPlayers = playerManager.playerNames.Length;
         playerCards = new GameObject[numPlayers];
 
-        Vector3 startPos = new Vector3(-(100*numPlayers), -10, 0);
+        Vector3 startPos = new Vector3(-370, -230, 0);
         GameObject canvas = GameObject.Find("Canvas");
 
         for (int i = 0; i < playerManager.playerNames.Length; i++)
@@ -241,8 +241,8 @@ public class MenuManager : MonoBehaviour {
             // Save the card
             playerCards[i] = temp;
 
-            // Increment position
-            startPos = new Vector3(startPos.x + (100 + (25*numPlayers)), -10, 0);
+            // Assign position
+            startPos = new Vector3(startPos.x + 250, -230, 0);
         }
     }
 
