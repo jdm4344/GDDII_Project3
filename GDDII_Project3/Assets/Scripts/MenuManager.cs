@@ -220,13 +220,6 @@ public class MenuManager : MonoBehaviour {
     /// </summary>
     public void GeneratePlayerCards()
     {
-        // BASIC CODE - Working
-        // Update Player names
-        //player1Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[0];
-        //player2Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[1];
-        //player3Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[2];
-        //player4Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[3];
-
         // DYNAMIC CODE - In Progress
         int numPlayers = playerManager.playerNames.Length;
         playerCards = new GameObject[numPlayers];

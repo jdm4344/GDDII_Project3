@@ -16503,11 +16503,11 @@ MonoBehaviour:
   optionsPanel: {fileID: 1052841600}
   playerCardTemplate: {fileID: 1011255210}
   playerCards: []
+  optionsManager: {fileID: 0}
   playerManager: {fileID: 0}
   minigamePanel: {fileID: 561178888}
   minigames:
   - MinigameAsteroids
-  - MinigameButtonMash
   iconContainer: {fileID: 1658586129}
   icons: []
   countdownPopup: {fileID: 351578982}
