@@ -63,7 +63,7 @@ public class GameManagerScript : MonoBehaviour {
     // Initialization
     void Start ()
     {
-        currentPlayers = 4;
+        currentPlayers = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames.Length;
         curScreen = 0;
         minTime = 0;
     }
@@ -120,34 +120,44 @@ public class GameManagerScript : MonoBehaviour {
             gameObjects.SetActive(true);
 
             try {
-                pc1.GetComponent<Text>().text = "Health: " + GameObject.Find("P1").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                pc1.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[0];
+                pc1.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P1").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
             } 
             catch (System.NullReferenceException e) { 
-                pc1.GetComponent<Text>().text = "WASTED";
+                pc1.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player1 Reference Gone: " + e);
             }
             
             try {
-                pc2.GetComponent<Text>().text = "Health: " + GameObject.Find("P2").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P2").GetComponent<CarController>().boosts + "";
+                pc2.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[1];
+                pc2.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P2").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
             } 
             catch (System.NullReferenceException e) { 
-                pc2.GetComponent<Text>().text = "WASTED";
+                pc2.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player2 Reference Gone: " + e); 
             }
 
             try {
-                pc3.GetComponent<Text>().text = "Health: " + GameObject.Find("P3").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P3").GetComponent<CarController>().boosts + "";
+                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().currentPlayers >= 3)
+                {
+                    pc3.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[2];
+                    pc3.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P3").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                }
             } 
             catch (System.NullReferenceException e) { 
-                pc3.GetComponent<Text>().text = "WASTED";
+                pc3.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player3 Reference Gone: " + e);
             }
 
             try {
-                pc4.GetComponent<Text>().text = "Health: " + GameObject.Find("P4").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P4").GetComponent<CarController>().boosts + "";
+                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().currentPlayers == 4)
+                {
+                    pc4.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[3];
+                    pc4.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P4").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                } 
             } 
             catch (System.NullReferenceException e) { 
-                pc4.GetComponent<Text>().text = "WASTED";
+                pc4.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player4 Reference Gone: " + e);
             }
         }
@@ -155,6 +165,9 @@ public class GameManagerScript : MonoBehaviour {
         // Win Screen
         if (currentPlayers == 1)
         {
+            // Give fame
+            //GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerFame[0];
+
             infoScreens[5].SetActive(true);
             infoScreens[6].GetComponent<Text>().text = "P" + GameObject.FindGameObjectWithTag("Player").GetComponent<CarController>().player + " Wins";
             Time.timeScale = 0;

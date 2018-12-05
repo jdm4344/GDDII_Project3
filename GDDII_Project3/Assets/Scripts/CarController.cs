@@ -204,12 +204,14 @@ public class CarController : MonoBehaviour {
         if (boosting) 
         {
             triggerInput = 1.5f;
-            GetComponentInChildren<ParticleSystem>().textureSheetAnimation.SetSprite(0, manager.nitrousParticle);
+            GetComponentsInChildren<ParticleSystem>()[0].textureSheetAnimation.SetSprite(0, manager.nitrousParticle);
+            GetComponentsInChildren<ParticleSystem>()[1].textureSheetAnimation.SetSprite(0, manager.nitrousParticle);
         }
         else
         {
             triggerInput = Input.GetAxis("J" + player + "Triggers");
-            GetComponentInChildren<ParticleSystem>().textureSheetAnimation.SetSprite(0, manager.smokeParticle);
+            GetComponentsInChildren<ParticleSystem>()[0].textureSheetAnimation.SetSprite(0, manager.smokeParticle);
+            GetComponentsInChildren<ParticleSystem>()[1].textureSheetAnimation.SetSprite(0, manager.smokeParticle);
         }
         
         if (Input.GetButton(player + "A") && boosts > 0 && !singlePressA) // Boost
