@@ -21,9 +21,6 @@ public class PlayerCollision : MonoBehaviour {
     private double powerUpTimer1;
     private double timer;
     private float maxVel;
-    
-    //private double powerUpTimer2;
-    //private double powerUpTimer3;
 
     private float invincibilityDuration;
     private float shieldDuration;
@@ -48,9 +45,6 @@ public class PlayerCollision : MonoBehaviour {
         shieldDuration = 2;
         powerUpTimer1 = 0;
         maxVel = manager.GetComponent<GameManagerScript>().maxVelBoost;
-        Debug.Log(maxVel);
-        /*powerUpTimer2 = 0;
-        powerUpTimer3 = 0;*/
     }
 	
 	// Update
@@ -72,8 +66,8 @@ public class PlayerCollision : MonoBehaviour {
         if (lives == 0)
         {
             manager.GetComponent<GameManagerScript>().SubtractPlayer();
-            GameObject.Instantiate(explosion, transform.position, transform.rotation);
-            GameObject.Destroy(gameObject);
+            Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(gameObject);
         }
 
         // ================== Movement ===================
@@ -119,27 +113,20 @@ public class PlayerCollision : MonoBehaviour {
         {
             Debug.Log("Powerup finished");
             // Return everything to defaults
-            gameObject.GetComponent<CarController>().maxVel = manager.GetComponent<GameManagerScript>().defaultMaxVel;
-            gameObject.GetComponent<CarController>().maxAcc = manager.GetComponent<GameManagerScript>().defaultMaxAcc;
+            GetComponent<CarController>().boosting = false;
+            GetComponent<CarController>().maxVel = manager.GetComponent<GameManagerScript>().defaultMaxVel;
+            GetComponent<CarController>().maxAcc = manager.GetComponent<GameManagerScript>().defaultMaxAcc;
             pickedUpPowerup = false;
-        }/*
-        if (powerUpTimer2 < 0 && pickedUpPowerup)
-        {
-            Debug.Log("Powerup finished");
-            // Return everything to defaults
-            manager.GetComponent<StatManager>().currentWeapon = "Beam";
-            pickedUpPowerup = false;
-        }*/
+        }
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void OnCollisionEnter2D (Collision2D col)
     {
-        Debug.Log("hit");
         if (!isInvulnerable) 
         {
             if (
-               (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerCollision>().maxMov) 
-             || col.gameObject.tag == "Enemy")
+               (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerCollision>().maxMov) ||
+                col.gameObject.tag == "Enemy")
             {
                 DamageFlash();
                 isInvulnerable = true;
@@ -151,19 +138,23 @@ public class PlayerCollision : MonoBehaviour {
                 DamageFlash();
                 isInvulnerable = true;
                 invincibilityTimer = invincibilityDuration;
-                // slow them down
+                // slow down
                 GetComponent<CarController>().LoseHealth();
             }
         }
     }
 
-    void OnTriggerEnter2D(Collider2D col) 
+    void OnTriggerEnter2D (Collider2D col) 
     {
         if (col.gameObject.tag == "SpeedBoost")
         {
-            Debug.Log("Gained A Speed Boost");
+            //Debug.Log("Gained A Speed Boost");
             GetComponent<CarController>().boosts++;
-            Debug.Log( GetComponent<CarController>().boosts);
+        }
+        if (col.gameObject.tag == "MineItem")
+        {
+            Debug.Log("Gained A Mine");
+            GetComponent<CarController>().mines++;
         }
         if (col.gameObject.tag == "Mine")
         {
@@ -172,32 +163,27 @@ public class PlayerCollision : MonoBehaviour {
             invincibilityTimer = invincibilityDuration;
             GetComponent<CarController>().LoseHealth();
         }
-        /*
-        else if (col.otherCollider.gameObject.tag == "Shield")
-        {
-            Debug.Log("Gained Shield");
-            Shield();
-        }*/
     }
 
-    void DamageFlash()
+    void DamageFlash ()
     {
         Debug.Log("Damaged");
         timer = manager.GetComponent<GameManagerScript>().damageFlashTime;
-        gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
+        GetComponent<SpriteRenderer>().color = Color.gray;
     }
 
-    void Shield()
+    void Shield ()
     {
         invincibilityTimer = shieldDuration;
         isInvulnerable = true;
     }
 
-    public void SpeedBoost()
+    public void SpeedBoost ()
     {
         pickedUpPowerup = true;
-        powerUpTimer1 = manager.GetComponent<GameManagerScript>().powerUpDuration;
+        powerUpTimer1 = manager.GetComponent<GameManagerScript>().speedBoostDuration;
         GetComponent<CarController>().boosts--;
+        GetComponent<CarController>().boosting = true;
         GetComponent<CarController>().maxVel = manager.GetComponent<GameManagerScript>().maxVelBoost;
         GetComponent<CarController>().maxAcc = manager.GetComponent<GameManagerScript>().maxAccBoost;
     }

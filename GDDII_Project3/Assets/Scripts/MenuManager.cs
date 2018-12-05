@@ -48,10 +48,10 @@ public class MenuManager : MonoBehaviour {
     private List<GameObject> spaces; // List of Image objs
     #endregion
 
-    void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
+    // void Awake()
+    // {
+    //     //DontDestroyOnLoad(this.gameObject);
+    // }
 
     // Use this for initialization
     void Start () 
