@@ -10,17 +10,19 @@ public class CarController : MonoBehaviour {
     private Renderer sceneRenderer;
 
     // ~ GameObj Refs
-    public GameManagerScript manager;
-    public Camera cam;
     public GameObject exhausts;
     public GameObject mine;
+    public Camera cam;
+    public GameManagerScript manager;
+
 
     // ~ Input
-    private bool singlePress = false;
+    private bool singlePressA = false;
+    private bool singlePressB = false;
     private float joyStickHorizInput = 0;
     private float triggerInput = 0;
-    
-    private float inputDelay = 0;
+    private float inputDelayA = 0;
+    private float inputDelayB = 0;
 
     // ~ Physics
     private Rigidbody2D rgbd;
@@ -40,11 +42,12 @@ public class CarController : MonoBehaviour {
     public int player;
     
     // ~ Stats & Effects
+    public bool slowed;
+    public bool boosting;
     public int mines;
     public int boosts;
     public int health = 3;
-    public bool slowed;
-    
+
 
     // ==== PROPERTIES ====
 
@@ -60,14 +63,14 @@ public class CarController : MonoBehaviour {
 
     // ==== METHODS ====
 
-    void Awake()
+    void Awake ()
     {
         sceneRenderer = GetComponentInChildren<Renderer>();
         gameBorderRect = new Rect(cam.transform.position.x - 5.75f, cam.transform.position.y - 4.6f, 11.25f, 9.25f);
         rgbd = GetComponent<Rigidbody2D>();
 
-        maxVel = manager.GetComponent<GameManagerScript>().defaultMaxVel;
-        maxAcc = manager.GetComponent<GameManagerScript>().defaultMaxAcc;
+        maxVel = manager.defaultMaxVel;
+        maxAcc = manager.defaultMaxAcc;
 
         position = transform.position;
         velocity = Vector2.zero;
@@ -76,9 +79,10 @@ public class CarController : MonoBehaviour {
 
         mines = 0;
         boosts = 1;
+        boosting = false;
     }
 
-    void FixedUpdate()
+    void FixedUpdate ()
     {
         // ================= Debugging ===================
 
@@ -188,31 +192,63 @@ public class CarController : MonoBehaviour {
         exhausts.transform.rotation = Quaternion.Euler(0, 0, deltaAngle - 90);
     }
 
-    void Update() 
+    void Update () 
     {
-        // Handle Input
+        // Timer
+        inputDelayA += Time.deltaTime;
+        inputDelayB += Time.deltaTime;
+
+        // Input
         joyStickHorizInput = Input.GetAxis("J" + player + "Horizontal");
-        triggerInput = Input.GetAxis("J" + player + "Triggers");
-        inputDelay += Time.deltaTime;
         
-        if (Input.GetButton(player + "A") && boosts > 0 && !singlePress)
+        if (boosting) 
         {
-            singlePress = true;
-            Debug.Log("Boost");
-            GetComponent<PlayerCollision>().SpeedBoost();
-            inputDelay = 0;
+            triggerInput = 1.5f;
+            GetComponentsInChildren<ParticleSystem>()[0].textureSheetAnimation.SetSprite(0, manager.nitrousParticle);
+            GetComponentsInChildren<ParticleSystem>()[1].textureSheetAnimation.SetSprite(0, manager.nitrousParticle);
+        }
+        else
+        {
+            triggerInput = Input.GetAxis("J" + player + "Triggers");
+            GetComponentsInChildren<ParticleSystem>()[0].textureSheetAnimation.SetSprite(0, manager.smokeParticle);
+            GetComponentsInChildren<ParticleSystem>()[1].textureSheetAnimation.SetSprite(0, manager.smokeParticle);
         }
         
-        if (inputDelay > 2.0f)
+        if (Input.GetButton(player + "A") && boosts > 0 && !singlePressA) // Boost
         {
-            singlePress = false;
+            singlePressA = true;
+            GetComponent<PlayerCollision>().SpeedBoost();
+            inputDelayA = 0;
+        }
+        
+        if (Input.GetButton(player + "B") && boosts > 0 && !singlePressB) // Drop Mine
+        {
+            singlePressB = true;
+            //GetComponent<PlayerCollision>().SpeedBoost();
+            inputDelayB = 0;
+        }
+
+        // Delay
+        if (inputDelayA > 2.0f)
+        {
+            singlePressA = false;
+        }
+        if (inputDelayB > 2.0f)
+        {
+            singlePressB = false;
         }
 
         // Move Boundaries
         gameBorderRect = new Rect(cam.transform.position.x - 5.75f, cam.transform.position.y - 4.6f, 11.25f, 9.25f);
     }
 
-    void GameBorder()
+    public void LoseHealth ()
+    {
+        health--;
+        Debug.Log("Player " + player + " Health : " + health);
+    }
+
+    void GameBorder ()
     {
         if (transform.position.x > gameBorderRect.xMax) 
         {
@@ -238,11 +274,5 @@ public class CarController : MonoBehaviour {
             velocity.y = 0;
             rgbd.AddForce(Vector2.up);
         }
-    }
-
-    public void LoseHealth()
-    {
-        health--;
-        Debug.Log("Player " + player + " Health : " + health);
     }
 }

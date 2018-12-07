@@ -12,12 +12,6 @@ public class PlayerManager : MonoBehaviour {
     public int[] playerFame;
     public int[] turnOrder;
 
-    public int player1fame;
-    public int player2fame;
-    public int player3fame;
-    public int player4fame;
-
-
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);

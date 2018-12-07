@@ -9,7 +9,10 @@ public class GameManagerScript : MonoBehaviour {
 
     // ==== VARIABLES ====
     // ~ Refs
+    [Header("MiniGame Objects References")]
     public GameObject gameObjects;
+
+    [Header("Player Cards")]
     public GameObject pc1;
     public GameObject pc2;
     public GameObject pc3;
@@ -20,19 +23,21 @@ public class GameManagerScript : MonoBehaviour {
     private bool gameStart = false;
     private bool singlePress = false;
     private float minTime = 0;
+
+    [Header("Debug Mode")]
     public bool testMode = true;
+
+    [Header("Game Control")]
+    public List<GameObject> infoScreens;
     public bool paused;
     public int currentPlayers = 4;
+
+    [Header("Stat Changes")]
     public float spawnNormTimer = 0;
     public float boostSpawnTimer = 0;
     public float spawnBomberTimer = 0;
     public float spawnSwerverTimer = 0;
     public string winner;
-
-    // ~ Prefabs
-    public List<GameObject> infoScreens;
-    public GameObject Vehicles;
-    public GameObject boost;
 
     // ~ Players
     public float defaultMaxVel = 0.07f;
@@ -41,23 +46,30 @@ public class GameManagerScript : MonoBehaviour {
     public float damageFlashTime = 0.05f;
 
     // ~ Power Ups
-    public float powerUpDuration = 6;
+    public float speedBoostDuration = 1.0f;
     // ~~ Speed Boost
     public float maxVelBoost = 0.1f;
     public float maxAccBoost = 0.08f;
+
+    // ~ Prefabs
+    [Header("Prefabs")]
+    public GameObject Vehicles;
+    public GameObject boost;
+    public Sprite smokeParticle;
+    public Sprite nitrousParticle;
 
 
     // ===== METHODS =====
     // Initialization
     void Start ()
     {
-        currentPlayers = 4;
+        currentPlayers = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames.Length;
         curScreen = 0;
         minTime = 0;
     }
 
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
-    void FixedUpdate()
+    void FixedUpdate ()
     {
         if (gameStart)
         {
@@ -73,7 +85,7 @@ public class GameManagerScript : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
+    void Update ()
     {
         // Debugging
         if (testMode)
@@ -90,7 +102,13 @@ public class GameManagerScript : MonoBehaviour {
             minTime = 0;
             NextScreen();
         }
-        if (minTime > 0.8f)
+        if (!gameStart && (Input.GetButton("1B") || Input.GetButton("2B") || Input.GetButton("3B") || Input.GetButton("4B")) && !singlePress)
+        {
+            singlePress = true;
+            minTime = 0;
+            PrevScreen();
+        }
+        if (minTime > 0.6f)
         {
             singlePress = false;
         }
@@ -102,34 +120,44 @@ public class GameManagerScript : MonoBehaviour {
             gameObjects.SetActive(true);
 
             try {
-                pc1.GetComponent<Text>().text = "Health: " + GameObject.Find("P1").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                pc1.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[0];
+                pc1.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P1").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
             } 
             catch (System.NullReferenceException e) { 
-                pc1.GetComponent<Text>().text = "WASTED";
+                pc1.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player1 Reference Gone: " + e);
             }
             
             try {
-                pc2.GetComponent<Text>().text = "Health: " + GameObject.Find("P2").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P2").GetComponent<CarController>().boosts + "";
+                pc2.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[1];
+                pc2.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P2").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
             } 
             catch (System.NullReferenceException e) { 
-                pc2.GetComponent<Text>().text = "WASTED";
+                pc2.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player2 Reference Gone: " + e); 
             }
 
             try {
-                pc3.GetComponent<Text>().text = "Health: " + GameObject.Find("P3").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P3").GetComponent<CarController>().boosts + "";
+                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().currentPlayers >= 3)
+                {
+                    pc3.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[2];
+                    pc3.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P3").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                }
             } 
             catch (System.NullReferenceException e) { 
-                pc3.GetComponent<Text>().text = "WASTED";
+                pc3.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player3 Reference Gone: " + e);
             }
 
             try {
-                pc4.GetComponent<Text>().text = "Health: " + GameObject.Find("P4").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P4").GetComponent<CarController>().boosts + "";
+                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().currentPlayers == 4)
+                {
+                    pc4.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[3];
+                    pc4.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P4").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                } 
             } 
             catch (System.NullReferenceException e) { 
-                pc4.GetComponent<Text>().text = "WASTED";
+                pc4.GetComponentsInChildren<Text>()[1].text = "WASTED";
                 Debug.Log("Player4 Reference Gone: " + e);
             }
         }
@@ -137,6 +165,9 @@ public class GameManagerScript : MonoBehaviour {
         // Win Screen
         if (currentPlayers == 1)
         {
+            // Give fame
+            //GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerFame[0];
+
             infoScreens[5].SetActive(true);
             infoScreens[6].GetComponent<Text>().text = "P" + GameObject.FindGameObjectWithTag("Player").GetComponent<CarController>().player + " Wins";
             Time.timeScale = 0;
@@ -179,7 +210,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
     // Control Lives
-    public void SubtractPlayer()
+    public void SubtractPlayer ()
     {
         currentPlayers--;
     }
@@ -189,7 +220,7 @@ public class GameManagerScript : MonoBehaviour {
 	// ======= BUTTON FUNCTIONS ========
 	// =================================
 
-    public void NextScreen()
+    public void NextScreen ()
     {   
         if (curScreen < 4)
         {
@@ -200,14 +231,13 @@ public class GameManagerScript : MonoBehaviour {
         else
             gameStart = true;
     }
-    public void PrevScreen()
+    public void PrevScreen ()
     {
         if (curScreen > 0)
         {
             curScreen--;
             infoScreens[curScreen].SetActive(true);
             infoScreens[curScreen + 1].SetActive(false);
-            
         }
     }
 }

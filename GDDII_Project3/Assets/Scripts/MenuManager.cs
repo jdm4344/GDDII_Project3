@@ -11,15 +11,15 @@ public class MenuManager : MonoBehaviour {
 
     // Variables
     public GameObject menuPanel;
+    public GameObject optionsPanel;
+    public GameObject playerCardTemplate; // template for player card objects
+    public GameObject[] playerCards; // array of created player cards
+    public GameObject optionsManager;
+
     #region Persistent variables
     private bool onMenu;
     [SerializeField]
     private PlayerManager playerManager;
-    // Each array holds the children 'TurnData', 'FameData', and the 'Text' child of 'TextArea' under the Name1-4 objects
-    public GameObject[] player1Objects;
-    public GameObject[] player2Objects;
-    public GameObject[] player3Objects;
-    public GameObject[] player4Objects;
     #endregion
 
     #region Minigame specific variables
@@ -58,6 +58,8 @@ public class MenuManager : MonoBehaviour {
         menuPanel.SetActive(true);
         minigamePanel.SetActive(false);
         mapPanel.SetActive(false);
+        optionsPanel.SetActive(false);
+
 
         playedMinigames = new Stack<string>();
         spaces = new List<GameObject>();
@@ -75,9 +77,10 @@ public class MenuManager : MonoBehaviour {
         }
 
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+        optionsManager = GameObject.Find("OptionsManager");
         onMenu = true;
 
-        //SetPlayers();
+        GeneratePlayerCards();
 	}
 	
 	// Update is called once per frame
@@ -102,15 +105,23 @@ public class MenuManager : MonoBehaviour {
         //Set current player fame to display
         if(menuPanel.activeInHierarchy)
         {
-            TextMeshProUGUI fame1 = player1Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
-            TextMeshProUGUI fame2 = player2Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
-            TextMeshProUGUI fame3 = player3Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
-            TextMeshProUGUI fame4 = player4Objects[1].GetComponent<TMPro.TextMeshProUGUI>();
+            int numPlayers = playerManager.playerNames.Length;
+            TextMeshProUGUI[] fameVal = new TextMeshProUGUI[numPlayers];
 
-            fame1.text = playerManager.player1fame.ToString();
-            fame2.text = playerManager.player2fame.ToString();
-            fame3.text = playerManager.player3fame.ToString();
-            fame4.text = playerManager.player4fame.ToString();
+            for (int i = 0; i < numPlayers; i++)
+            {
+                fameVal[i] = playerCards[i].transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>();
+                fameVal[i].text = playerManager.playerFame[i].ToString();
+            }
+        }
+
+        if (optionsPanel.activeInHierarchy)
+        {
+            TMP_InputField checkVal = GameObject.Find("CheckpointCostValue").GetComponent<TMP_InputField>();
+            TMP_InputField fameVal = GameObject.Find("AddFameValue").GetComponent<TMP_InputField>();
+
+            checkVal.text = optionsManager.GetComponent<optionsManager>().checkpointCost.ToString();
+            fameVal.text = optionsManager.GetComponent<optionsManager>().fameForAllValue.ToString();
         }
     }
 
@@ -205,92 +216,138 @@ public class MenuManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sets player names from PlayerManager.cs
+    /// Creates UI elements displaying player data and names
     /// </summary>
-    public void SetPlayers()
+    public void GeneratePlayerCards()
     {
-        // Update Player names
-        player1Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[0];
-        player2Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[1];
-        player3Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[2];
-        player4Objects[2].GetComponent<TextMeshProUGUI>().text = playerManager.playerNames[3];
+        // DYNAMIC CODE - In Progress
+        int numPlayers = playerManager.playerNames.Length;
+        playerCards = new GameObject[numPlayers];
+
+        GameObject canvas = GameObject.Find("Canvas");
+        Vector3 startPos = new Vector3(0, 0, 0);
+
+        //Initial position based on # of players
+        if (numPlayers < 3)
+            startPos = new Vector3(-175, -260, 0);
+        else if (numPlayers == 3)
+            startPos = new Vector3(-275, -260, 0);
+        else if (numPlayers == 4)
+            startPos = new Vector3(-375, -260, 0);
+
+        for (int i = 0; i < playerManager.playerNames.Length; i++)
+        {
+            // Create card object
+            GameObject temp = Instantiate(playerCardTemplate);
+            temp.transform.SetParent(menuPanel.transform);
+
+            // Set the player's name
+            temp.GetComponent<TMP_InputField>().text = playerManager.playerNames[i];
+
+            // Set position
+            temp.GetComponent<RectTransform>().localPosition = startPos;
+            // Template is not active, so set active - doing this may be redundant
+            temp.SetActive(true);
+            // Save the card
+            playerCards[i] = temp;
+
+            // Assign position (based on # of players)
+            if (numPlayers < 3)
+                startPos = new Vector3(startPos.x + 350, -260, 0);
+            else if (numPlayers == 3)
+                startPos = new Vector3(startPos.x + 275, -260, 0);
+            else if (numPlayers == 4)
+                startPos = new Vector3(startPos.x + 250, -260, 0);
+        }
     }
 
+    #region Temp Score Code
     /// <summary>
     /// Purchase stuff with the shop button
     /// </summary>
     public void Purchase()
     {
-        string coststr = GameObject.Find("costValue").GetComponent<TextMeshProUGUI>().text;
+        string coststr = GameObject.Find("costValue").GetComponent<Text>().text;
         int cost;
         int.TryParse(coststr, out cost);
 
-        string playerstr = GameObject.Find("playerValue").GetComponent<TextMeshProUGUI>().text;
-        int player;
-        int.TryParse(playerstr, out player);
+        int numPlayers = playerManager.playerNames.Length;
+
+        bool player1Selected = GameObject.Find("Toggle1").GetComponent<Toggle>().isOn;
+        bool player2Selected = GameObject.Find("Toggle2").GetComponent<Toggle>().isOn;
+        bool player3Selected = GameObject.Find("Toggle3").GetComponent<Toggle>().isOn;
+        bool player4Selected = GameObject.Find("Toggle4").GetComponent<Toggle>().isOn;
 
 
-        if (player == 1)
-            playerManager.player1fame -= cost;
-        else if (player == 2)
-            playerManager.player2fame -= cost;
-        else if (player == 3)
-            playerManager.player3fame -= cost;
-        else if (player == 4)
-            playerManager.player4fame -= cost;
+        if (player1Selected && numPlayers > 0)
+           playerManager.playerFame[0] -= cost;
+        else if (player2Selected && numPlayers > 1)
+            playerManager.playerFame[1] -= cost;
+        else if (player3Selected && numPlayers > 2)
+            playerManager.playerFame[2] -= cost;
+        else if (player4Selected && numPlayers > 3)
+            playerManager.playerFame[3] -= cost;
 
     }
 
-    /// <summary>
-    /// Purchase stuff with the checkpoint button
-    /// </summary>
+    ///// <summary>
+    ///// Purchase stuff with the checkpoint button
+    ///// </summary>
     public void PurchaseCheck()
     {
-        string playerstrCheck = GameObject.Find("playerValueCheck").GetComponent<TextMeshProUGUI>().text;
-        int playerCheck;
-        int.TryParse(playerstrCheck, out playerCheck);
+        int numPlayers = playerManager.playerNames.Length;
+
+        bool player1Selected = GameObject.Find("ToggleCheck1").GetComponent<Toggle>().isOn;
+        bool player2Selected = GameObject.Find("ToggleCheck2").GetComponent<Toggle>().isOn;
+        bool player3Selected = GameObject.Find("ToggleCheck3").GetComponent<Toggle>().isOn;
+        bool player4Selected = GameObject.Find("ToggleCheck4").GetComponent<Toggle>().isOn;
 
 
-        if (playerCheck == 1)
-            playerManager.player1fame -= 10;
-        else if (playerCheck == 2)
-            playerManager.player2fame -= 10;
-        else if (playerCheck == 3)
-            playerManager.player3fame -= 10;
-        else if (playerCheck == 4)
-            playerManager.player4fame -= 10;
-
+        if (player1Selected && numPlayers > 0)
+            playerManager.playerFame[0] -= optionsManager.GetComponent<optionsManager>().checkpointCost;
+        else if (player2Selected && numPlayers > 1)
+            playerManager.playerFame[1] -= optionsManager.GetComponent<optionsManager>().checkpointCost;
+        else if (player3Selected && numPlayers > 2)
+            playerManager.playerFame[2] -= optionsManager.GetComponent<optionsManager>().checkpointCost;
+        else if (player4Selected && numPlayers > 3)
+            playerManager.playerFame[3] -= optionsManager.GetComponent<optionsManager>().checkpointCost;
     }
 
-    /// <summary>
-    /// Add Fame to player 1
-    /// </summary>
-    public void AddFame1()
+    ///// <summary>
+    ///// Add Fame to all players
+    ///// </summary>
+    public void AddFame()
     {
-        playerManager.player1fame++;
+        int numPlayers = playerManager.playerNames.Length;
+
+        for (int i = 0; i < numPlayers; i++)
+        {
+            playerManager.playerFame[i] += optionsManager.GetComponent<optionsManager>().fameForAllValue;
+        }
     }
 
-    /// <summary>
-    /// Add Fame to player 2
-    /// </summary>
-    public void AddFame2()
+    #endregion
+
+    public void DisplayOptions()
     {
-        playerManager.player2fame++;
+        optionsPanel.SetActive(!optionsPanel.activeSelf);
+        menuPanel.SetActive(!menuPanel.activeSelf);
     }
 
-    /// <summary>
-    /// Add Fame to player 3
-    /// </summary>
-    public void AddFame3()
+    public void UpdateOptions()
     {
-        playerManager.player3fame++;
-    }
+        TMP_InputField checkVal = GameObject.Find("CheckpointCostValue").GetComponent<TMP_InputField>();
+        TMP_InputField fameVal = GameObject.Find("AddFameValue").GetComponent<TMP_InputField>();
 
-    /// <summary>
-    /// Add Fame to player 1
-    /// </summary>
-    public void AddFame4()
-    {
-        playerManager.player4fame++;
+        string tempStr = checkVal.text;
+        int tempCheck;
+        int.TryParse(tempStr, out tempCheck);
+
+        tempStr = fameVal.text;
+        int tempFame;
+        int.TryParse(tempStr, out tempFame);
+
+        optionsManager.GetComponent<optionsManager>().fameForAllValue = tempFame;
+        optionsManager.GetComponent<optionsManager>().checkpointCost = tempCheck;
     }
 }
