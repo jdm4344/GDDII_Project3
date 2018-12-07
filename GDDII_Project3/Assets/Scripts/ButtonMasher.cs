@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonMasher : MonoBehaviour {
 
@@ -31,9 +32,14 @@ public class ButtonMasher : MonoBehaviour {
     // access to the player manager script on the scene manager object
     public PlayerManager playerManager;
 
+    // access to the text box
+    public Text progressText;
+    public string bufferString;
+
     void Awake()
     {
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+        progressText = GameObject.Find("Canvas").GetComponent<Text>();
     }
 
     // Use this for initialization
@@ -51,6 +57,8 @@ public class ButtonMasher : MonoBehaviour {
         {
             playerNames[i] = playerManager.playerNames[i];
         }
+
+        bufferString = "";
     }
 	
 	// Update is called once per frame
@@ -73,7 +81,10 @@ public class ButtonMasher : MonoBehaviour {
         {
             DisplayPercentage();
         }
-        DisplayWinner();
+        else
+        {
+            DisplayWinner();
+        }
     }
 
     // show the winner
@@ -85,11 +96,13 @@ public class ButtonMasher : MonoBehaviour {
     // draw the percentages on screen
     void DisplayPercentage()
     {
-        for (int i = 0; i < numOfPlayers; i++)
-        {
-            // make a new text box, shifts over for each player
-            GUI.TextArea(new Rect(-6f + 4f * i, 2f, 3f, 1f), percentages[i] + "%");
-        }
+        //for (int i = 0; i < numOfPlayers; i++)
+        //{
+        //    // make a new text box, shifts over for each player
+        //    GUI.Label(new Rect(-6f + 4f * i, 2f, 3f, 1f), percentages[i] + "%");
+        //}
+
+        progressText.text = "P1: " + percentages[]
     }
 
     // adds to the button count of the player who pressed it
@@ -100,12 +113,10 @@ public class ButtonMasher : MonoBehaviour {
         {
             // check if the A button has been pressed this frame (NOT a hold)
             if (Input.GetButtonDown(i + "A"))
+            {
                 buttonPresses[i]++; // adds to the count
-        }
-
-        for (int i = 0; i < numOfPlayers; i++)
-        {
-            percentages[i] = buttonPresses[i] / pressesToWin * 100;
+                percentages[i] = buttonPresses[i] / pressesToWin * 100;
+            }
         }
     }
 
