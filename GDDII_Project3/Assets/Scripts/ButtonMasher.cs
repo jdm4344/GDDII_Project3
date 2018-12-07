@@ -102,7 +102,7 @@ public class ButtonMasher : MonoBehaviour {
         //    GUI.Label(new Rect(-6f + 4f * i, 2f, 3f, 1f), percentages[i] + "%");
         //}
 
-        progressText.text = "P1: " + percentages[]
+        progressText.text = "P1: " + percentages[1];
     }
 
     // adds to the button count of the player who pressed it
