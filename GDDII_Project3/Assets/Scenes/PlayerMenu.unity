@@ -1910,8 +1910,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42840621e791d242b313ba7ba927e56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointCost: 0
-  fameForAllValue: 0
+  checkpointCost: 10
+  fameForAllValue: 2
 --- !u!4 &2131827428
 Transform:
   m_ObjectHideFlags: 0
