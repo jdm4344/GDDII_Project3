@@ -15,7 +15,7 @@ public class ButtonMasher : MonoBehaviour {
     public int[] buttonPresses;
 
     // percentage complete
-    public int[] percentages;
+    public float[] percentages;
 
     // how many to win?
     public const int pressesToWin = 100;
@@ -33,13 +33,15 @@ public class ButtonMasher : MonoBehaviour {
     public PlayerManager playerManager;
 
     // access to the text box
-    public Text progressText;
+    //public Text progressText;
     public string bufferString;
+
+    public GUIStyle myStyle;
 
     void Awake()
     {
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
-        progressText = GameObject.Find("Canvas").GetComponent<Text>();
+        //progressText = GameObject.Find("Canvas").GetComponent<Text>();
     }
 
     // Use this for initialization
@@ -50,7 +52,7 @@ public class ButtonMasher : MonoBehaviour {
         // setup
         buttonPresses = new int[numOfPlayers];
         playerNames = new string[numOfPlayers];
-        percentages = new int[numOfPlayers];
+        percentages = new float[numOfPlayers];
         gameOver = false;
         // get player names
         for (int i = 0; i < numOfPlayers; i++)
@@ -59,6 +61,10 @@ public class ButtonMasher : MonoBehaviour {
         }
 
         bufferString = "";
+
+        myStyle = new GUIStyle();
+        myStyle.fontSize = 40;
+        myStyle.normal.textColor = Color.black;
     }
 	
 	// Update is called once per frame
@@ -90,19 +96,19 @@ public class ButtonMasher : MonoBehaviour {
     // show the winner
     void DisplayWinner()
     {
-        GUI.TextArea(new Rect(0f, 3f, 6f, 2f), "Player " + playerNames[winner] + " has won!");
+        GUI.TextArea(new Rect(400, 300, 150, 100), "Player " + playerNames[winner] + " has won!", myStyle);
+
     }
 
     // draw the percentages on screen
     void DisplayPercentage()
     {
-        //for (int i = 0; i < numOfPlayers; i++)
-        //{
-        //    // make a new text box, shifts over for each player
-        //    GUI.Label(new Rect(-6f + 4f * i, 2f, 3f, 1f), percentages[i] + "%");
-        //}
-
-        progressText.text = "P1: " + percentages[1];
+        for (int i = 0; i < numOfPlayers; i++)
+        {
+            // make a new text box, shifts over for each player
+            bufferString = percentages[i].ToString() + "%";
+            GUI.Label(new Rect(40 + i * 310, 350, 100, 100), bufferString, myStyle);
+        }
     }
 
     // adds to the button count of the player who pressed it
@@ -114,8 +120,8 @@ public class ButtonMasher : MonoBehaviour {
             // check if the A button has been pressed this frame (NOT a hold)
             if (Input.GetButtonDown(i + "A"))
             {
-                buttonPresses[i]++; // adds to the count
-                percentages[i] = buttonPresses[i] / pressesToWin * 100;
+                buttonPresses[i - 1]++; // adds to the count
+                percentages[i - 1] = (float)buttonPresses[i - 1] / pressesToWin * 100;
             }
         }
     }
