@@ -33,11 +33,15 @@ public class ButtonMasher : MonoBehaviour {
     // access to the player manager script on the scene manager object
     public PlayerManager playerManager;
 
+    public optionsManager opManager;
+
     // access to the text box
     //public Text progressText;
     public string bufferString;
 
     public GUIStyle myStyle;
+
+    private bool winFlag;
 
     // Button to return to menu
     public GameObject rtmButton;
@@ -45,6 +49,7 @@ public class ButtonMasher : MonoBehaviour {
     void Awake()
     {
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+        opManager = GameObject.Find("OptionsManager").GetComponent<optionsManager>();
         //progressText = GameObject.Find("Canvas").GetComponent<Text>();
     }
 
@@ -69,6 +74,8 @@ public class ButtonMasher : MonoBehaviour {
         myStyle = new GUIStyle();
         myStyle.fontSize = 40;
         myStyle.normal.textColor = Color.black;
+
+        winFlag = false;
     }
 	
 	// Update is called once per frame
@@ -102,8 +109,26 @@ public class ButtonMasher : MonoBehaviour {
     {
         GUI.TextArea(new Rect(360, 300, 150, 100), "Player " + playerNames[winner - 1] + " has won!", myStyle);
 
-        // Activate the menu button
-        rtmButton.SetActive(true);
+        if(winFlag)
+        {
+            // add fame to players
+            for (int j = 0; j < playerManager.playerFame.Length; j++)
+            {
+                if (j == winner - 1)
+                {
+                    playerManager.playerFame[j] += 5;
+                }
+                else
+                {
+                    playerManager.playerFame[j] += opManager.fameForAllValue;
+                }
+            }
+
+            // Activate the menu button
+            rtmButton.SetActive(true);
+
+            winFlag = false;
+        }
     }
 
     // draw the percentages on screen
@@ -141,6 +166,8 @@ public class ButtonMasher : MonoBehaviour {
         {
             if (buttonPresses[i] >= pressesToWin)
             {
+                winFlag = true;
+
                 // end the game
                 gameOver = true;
                 // make the leaderboard with values for fame
