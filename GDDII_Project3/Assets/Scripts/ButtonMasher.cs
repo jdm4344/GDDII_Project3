@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ButtonMasher : MonoBehaviour {
 
@@ -37,6 +38,9 @@ public class ButtonMasher : MonoBehaviour {
     public string bufferString;
 
     public GUIStyle myStyle;
+
+    // Button to return to menu
+    public GameObject rtmButton;
 
     void Awake()
     {
@@ -96,8 +100,10 @@ public class ButtonMasher : MonoBehaviour {
     // show the winner
     void DisplayWinner()
     {
-        GUI.TextArea(new Rect(400, 300, 150, 100), "Player " + playerNames[winner] + " has won!", myStyle);
+        GUI.TextArea(new Rect(360, 300, 150, 100), "Player " + playerNames[winner - 1] + " has won!", myStyle);
 
+        // Activate the menu button
+        rtmButton.SetActive(true);
     }
 
     // draw the percentages on screen
@@ -120,6 +126,7 @@ public class ButtonMasher : MonoBehaviour {
             // check if the A button has been pressed this frame (NOT a hold)
             if (Input.GetButtonDown(i + "A"))
             {
+                Debug.Log(i + "A");
                 buttonPresses[i - 1]++; // adds to the count
                 percentages[i - 1] = (float)buttonPresses[i - 1] / pressesToWin * 100;
             }
@@ -162,5 +169,10 @@ public class ButtonMasher : MonoBehaviour {
     {
         // gives a value between 0 and 10, not linear, based on score
         return (buttonPresses * buttonPresses) / (pressesToWin * pressesToWin) * 10;
+    }
+
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
