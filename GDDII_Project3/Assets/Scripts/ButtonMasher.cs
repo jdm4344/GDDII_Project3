@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -120,6 +121,30 @@ public class ButtonMasher : MonoBehaviour {
                 }
                 else
                 {
+                    //// Add fame based on placement
+                    //int[] temp = new int[buttonPresses.Length];
+
+                    //// copy button presses
+                    //for (int i = 0; i < buttonPresses.Length; i++)
+                    //{
+                    //    temp[i] = buttonPresses[i];
+                    //}
+                    //// Sort high-low
+                    //Array.Sort(temp);
+                    //// Compare
+                    //for (int k = 1; k < temp.Length - 1; k++)
+                    //{
+                    //    for (int l = 0; l < temp.Length; l++)
+                    //    {
+                    //        if (temp[k] == buttonPresses[l])
+                    //        {
+                    //            if(k == 1) { playerManager.playerFame[k] += 3; } // add 3 fame for 2nd
+                    //            if(k == 2) { playerManager.playerFame[k] += 1; } // add 1 fame for 3rd
+                    //        }
+                    //    }
+                    //}
+
+                    // Add passive fame for this round
                     playerManager.playerFame[j] += opManager.fameForAllValue;
                 }
             }
