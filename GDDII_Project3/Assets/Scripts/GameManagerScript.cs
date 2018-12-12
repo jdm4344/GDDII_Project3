@@ -9,6 +9,7 @@ public class GameManagerScript : MonoBehaviour {
 
     // ==== VARIABLES ====
     // ~ Refs
+    private PlayerManager pManager;
     [Header("MiniGame Objects References")]
     public GameObject gameObjects;
 
@@ -19,18 +20,21 @@ public class GameManagerScript : MonoBehaviour {
     public GameObject pc4;
 
     // ~ Game
+    private List<string> placement;
     private int curScreen = 0;
     private bool gameStart = false;
     private bool singlePress = false;
+    private bool fameAssigned;
     private float minTime = 0;
 
     [Header("Debug Mode")]
-    public bool testMode = true;
+    public bool testMode = false;
 
     [Header("Game Control")]
     public List<GameObject> infoScreens;
     public bool paused;
-    public int currentPlayers = 4;
+    public int totalPlayers;
+    private int playersLeft;
 
     [Header("Stat Changes")]
     public float spawnNormTimer = 0;
@@ -63,7 +67,10 @@ public class GameManagerScript : MonoBehaviour {
     // Initialization
     void Start ()
     {
-        currentPlayers = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames.Length;
+        pManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+        totalPlayers = pManager.playerNames.Length;
+        playersLeft = totalPlayers;
+        fameAssigned = false;
         curScreen = 0;
         minTime = 0;
     }
@@ -87,14 +94,21 @@ public class GameManagerScript : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        // Debugging
+        // ==== Debugging ====================================================
+
         if (testMode)
         {
-            Debug.Log("Players - " + currentPlayers);
+            Debug.Log("Players - " + totalPlayers);
 
             if (Input.GetKey("r")) 
                 SceneManager.LoadScene("MinigameAsteroids");
         }
+
+        // ==== Ref Update ===================================================
+
+        pManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+
+        // ==== Instructions =================================================
 
         if (!gameStart && (Input.GetButton("1A") || Input.GetButton("2A") || Input.GetButton("3A") || Input.GetButton("4A")) && !singlePress)
         {
@@ -113,73 +127,116 @@ public class GameManagerScript : MonoBehaviour {
             singlePress = false;
         }
 
-        // Display
+        // ==== Display ======================================================
+
         if (gameStart)
         {
             infoScreens[curScreen].SetActive(false);
             gameObjects.SetActive(true);
 
             try {
-                pc1.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[0];
+                pc1.GetComponentsInChildren<Text>()[0].text = pManager.playerNames[0];
                 pc1.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P1").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
             } 
             catch (System.NullReferenceException e) { 
+                playersLeft--;
                 pc1.GetComponentsInChildren<Text>()[1].text = "WASTED";
+                placement.Insert(0, pManager.playerNames[0]);
                 Debug.Log("Player1 Reference Gone: " + e);
             }
             
             try {
-                pc2.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[1];
+                pc2.GetComponentsInChildren<Text>()[0].text = pManager.playerNames[1];
                 pc2.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P2").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
             } 
             catch (System.NullReferenceException e) { 
+                playersLeft--;
                 pc2.GetComponentsInChildren<Text>()[1].text = "WASTED";
+                placement.Insert(0, pManager.playerNames[1]);
                 Debug.Log("Player2 Reference Gone: " + e); 
             }
 
+            // *Only show Playercards and cars if there are enough players
+
             try {
-                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().currentPlayers >= 3)
+                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().totalPlayers >= 3)
                 {
-                    pc3.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[2];
+                    pc3.GetComponentsInChildren<Text>()[0].text = pManager.playerNames[2];
                     pc3.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P3").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
+                }
+                else
+                {
+                    pc3.SetActive(false);
+                    GameObject.Find("P3").SetActive(false);
                 }
             } 
             catch (System.NullReferenceException e) { 
+                playersLeft--;
                 pc3.GetComponentsInChildren<Text>()[1].text = "WASTED";
+                if (pManager.playerNames.Length >= 3) 
+                {
+                    placement.Insert(0, pManager.playerNames[2]);
+                }
                 Debug.Log("Player3 Reference Gone: " + e);
+                
             }
 
             try {
-                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().currentPlayers == 4)
+                if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().totalPlayers >= 4)
                 {
-                    pc4.GetComponentsInChildren<Text>()[0].text = GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerNames[3];
+                    pc4.GetComponentsInChildren<Text>()[0].text = pManager.playerNames[3];
                     pc4.GetComponentsInChildren<Text>()[1].text = "Health: " + GameObject.Find("P4").GetComponent<PlayerCollision>().Lives + "    Boosts:" + GameObject.Find("P1").GetComponent<CarController>().boosts + "";
-                } 
+                }
+                else
+                {
+                    pc4.SetActive(false);
+                    GameObject.Find("P4").SetActive(false);
+                }
             } 
             catch (System.NullReferenceException e) { 
+                playersLeft--;
                 pc4.GetComponentsInChildren<Text>()[1].text = "WASTED";
+                if (pManager.playerNames.Length >= 4) 
+                {
+                    placement.Insert(0, pManager.playerNames[3]);
+                }
                 Debug.Log("Player4 Reference Gone: " + e);
             }
         }
         
-        // Win Screen
-        if (currentPlayers == 1)
+        // ==== Win Screen ==================================================
+
+        if (playersLeft <= 1)
         {
             // Give fame
-            //GameObject.Find("PlayerManager").GetComponent<PlayerManager>().playerFame[0];
+            //pManager.playerFame[0];
+            if (!fameAssigned)
+            {
+                for (int i = 0; i < placement.Count; i++)
+                {
+                    switch (i) {
+                        case 1:
+                            
+                            break;  
+                        default:
+                            break;
+                    }
+                }
+            }
 
             infoScreens[5].SetActive(true);
             infoScreens[6].GetComponent<Text>().text = "P" + GameObject.FindGameObjectWithTag("Player").GetComponent<CarController>().player + " Wins";
             Time.timeScale = 0;
 
-            if (Input.GetKeyDown("m")) 
+            if ((Input.GetButton("1B") || Input.GetButton("2B") || Input.GetButton("3B") || Input.GetButton("4B")) && !singlePress) 
             {
                 SceneManager.LoadScene("MainMenu");
             }
         }
 
-        // Spawning
-        if (currentPlayers != 1 && gameStart)
+        // ==== Spawning ====================================================
+
+        if (totalPlayers != 1 && gameStart)
         {
             // Spawn normal vehicles
             if (spawnNormTimer > 5) 
@@ -212,7 +269,7 @@ public class GameManagerScript : MonoBehaviour {
     // Control Lives
     public void SubtractPlayer ()
     {
-        currentPlayers--;
+        totalPlayers--;
     }
 
     

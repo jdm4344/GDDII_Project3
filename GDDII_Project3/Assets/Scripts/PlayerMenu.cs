@@ -44,6 +44,7 @@ public class PlayerMenu : MonoBehaviour {
                 if(numPlayers < 2) { numPlayers = 2; }
                 if(numPlayers > 4) { numPlayers = 4; }
                 createFields = true;
+                playerManager.playerNum = numPlayers;
                 foreach(GameObject field in playerNameFields) { GameObject.Destroy(field); }
                 break;
             case 1:

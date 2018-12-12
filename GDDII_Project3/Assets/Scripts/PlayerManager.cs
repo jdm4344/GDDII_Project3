@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayerManager : MonoBehaviour {
 
     // Variables
+    public int playerNum;
     public string[] playerNames;
     public int[] playerFame;
     public int[] turnOrder;
