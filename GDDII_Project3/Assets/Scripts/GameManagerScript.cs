@@ -336,4 +336,9 @@ public class GameManagerScript : MonoBehaviour {
             infoScreens[curScreen + 1].SetActive(false);
         }
     }
+
+    public void BackToMenu ()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
