@@ -268,7 +268,7 @@ public class GameManagerScript : MonoBehaviour {
             infoScreens[6].GetComponent<Text>().text = placement[0] + " Wins";
             Time.timeScale = 0;
 
-            if ((Input.GetButton("1B") || Input.GetButton("2B") || Input.GetButton("3B") || Input.GetButton("4B")) && !singlePress) 
+            if ((Input.GetButton("1B") || Input.GetButton("2B") || Input.GetButton("3B") || Input.GetButton("4B"))) 
             {
                 SceneManager.LoadScene("MainMenu");
             }
