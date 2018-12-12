@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ButtonMasher : MonoBehaviour {
 
@@ -32,15 +34,23 @@ public class ButtonMasher : MonoBehaviour {
     // access to the player manager script on the scene manager object
     public PlayerManager playerManager;
 
+    public optionsManager opManager;
+
     // access to the text box
     //public Text progressText;
     public string bufferString;
 
     public GUIStyle myStyle;
 
+    private bool winFlag;
+
+    // Button to return to menu
+    public GameObject rtmButton;
+
     void Awake()
     {
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+        opManager = GameObject.Find("OptionsManager").GetComponent<optionsManager>();
         //progressText = GameObject.Find("Canvas").GetComponent<Text>();
     }
 
@@ -65,6 +75,8 @@ public class ButtonMasher : MonoBehaviour {
         myStyle = new GUIStyle();
         myStyle.fontSize = 40;
         myStyle.normal.textColor = Color.black;
+
+        winFlag = false;
     }
 	
 	// Update is called once per frame
@@ -96,8 +108,52 @@ public class ButtonMasher : MonoBehaviour {
     // show the winner
     void DisplayWinner()
     {
-        GUI.TextArea(new Rect(400, 300, 150, 100), "Player " + playerNames[winner] + " has won!", myStyle);
+        GUI.TextArea(new Rect(360, 300, 150, 100), "Player " + playerNames[winner - 1] + " has won!", myStyle);
 
+        if(winFlag)
+        {
+            // add fame to players
+            for (int j = 0; j < playerManager.playerFame.Length; j++)
+            {
+                if (j == winner - 1)
+                {
+                    playerManager.playerFame[j] += 5;
+                }
+                else
+                {
+                    //// Add fame based on placement
+                    //int[] temp = new int[buttonPresses.Length];
+
+                    //// copy button presses
+                    //for (int i = 0; i < buttonPresses.Length; i++)
+                    //{
+                    //    temp[i] = buttonPresses[i];
+                    //}
+                    //// Sort high-low
+                    //Array.Sort(temp);
+                    //// Compare
+                    //for (int k = 1; k < temp.Length - 1; k++)
+                    //{
+                    //    for (int l = 0; l < temp.Length; l++)
+                    //    {
+                    //        if (temp[k] == buttonPresses[l])
+                    //        {
+                    //            if(k == 1) { playerManager.playerFame[k] += 3; } // add 3 fame for 2nd
+                    //            if(k == 2) { playerManager.playerFame[k] += 1; } // add 1 fame for 3rd
+                    //        }
+                    //    }
+                    //}
+
+                    // Add passive fame for this round
+                    playerManager.playerFame[j] += opManager.fameForAllValue;
+                }
+            }
+
+            // Activate the menu button
+            rtmButton.SetActive(true);
+
+            winFlag = false;
+        }
     }
 
     // draw the percentages on screen
@@ -120,6 +176,7 @@ public class ButtonMasher : MonoBehaviour {
             // check if the A button has been pressed this frame (NOT a hold)
             if (Input.GetButtonDown(i + "A"))
             {
+                Debug.Log(i + "A");
                 buttonPresses[i - 1]++; // adds to the count
                 percentages[i - 1] = (float)buttonPresses[i - 1] / pressesToWin * 100;
             }
@@ -134,6 +191,8 @@ public class ButtonMasher : MonoBehaviour {
         {
             if (buttonPresses[i] >= pressesToWin)
             {
+                winFlag = true;
+
                 // end the game
                 gameOver = true;
                 // make the leaderboard with values for fame
@@ -162,5 +221,10 @@ public class ButtonMasher : MonoBehaviour {
     {
         // gives a value between 0 and 10, not linear, based on score
         return (buttonPresses * buttonPresses) / (pressesToWin * pressesToWin) * 10;
+    }
+
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

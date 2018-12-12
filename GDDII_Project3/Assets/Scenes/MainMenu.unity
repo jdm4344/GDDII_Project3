@@ -1608,7 +1608,7 @@ GameObject:
   - component: {fileID: 205800192}
   m_Layer: 5
   m_Name: boardSpace (50)
-  m_TagString: Untagged
+  m_TagString: Shop Space
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1643,7 +1643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6933962, g: 0.7499959, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.5647059, b: 0.058823533, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -5374,7 +5374,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Asteroids
+  m_Text: Demo Derby
 --- !u!222 &558133501
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10353,7 +10353,7 @@ GameObject:
   - component: {fileID: 1022276734}
   m_Layer: 5
   m_Name: boardSpace (41)
-  m_TagString: Untagged
+  m_TagString: Shop Space
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10388,7 +10388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6933962, g: 0.7499959, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.5647059, b: 0.058823533, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -16396,7 +16396,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button Mash
+  m_Text: Refuel Rumble
 --- !u!222 &1543292348
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22172,7 +22172,7 @@ GameObject:
   - component: {fileID: 2085024558}
   m_Layer: 5
   m_Name: boardSpace (57)
-  m_TagString: Untagged
+  m_TagString: Shop Space
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22207,7 +22207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6933962, g: 0.7499959, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.5647059, b: 0.058823533, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
