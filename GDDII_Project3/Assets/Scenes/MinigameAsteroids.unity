@@ -1350,6 +1350,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e8c3349f018d084b8efb0c41c79cdef, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &647984198 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1816319483647038, guid: 1e8c3349f018d084b8efb0c41c79cdef,
+    type: 2}
+  m_PrefabInternal: {fileID: 647984197}
 --- !u!1 &666421542
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,6 +2168,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e8c3349f018d084b8efb0c41c79cdef, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1124975064 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1816319483647038, guid: 1e8c3349f018d084b8efb0c41c79cdef,
+    type: 2}
+  m_PrefabInternal: {fileID: 1124975063}
 --- !u!1001 &1127470179
 Prefab:
   m_ObjectHideFlags: 0
@@ -2564,6 +2574,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e8c3349f018d084b8efb0c41c79cdef, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1430599976 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1816319483647038, guid: 1e8c3349f018d084b8efb0c41c79cdef,
+    type: 2}
+  m_PrefabInternal: {fileID: 1430599975}
 --- !u!224 &1480553395 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224686659140733402, guid: f1499b9487476a649be4234733cf2454,
@@ -3481,6 +3496,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e8c3349f018d084b8efb0c41c79cdef, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1937953266 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1816319483647038, guid: 1e8c3349f018d084b8efb0c41c79cdef,
+    type: 2}
+  m_PrefabInternal: {fileID: 1937953265}
 --- !u!1 &1996963137
 GameObject:
   m_ObjectHideFlags: 0
@@ -3682,8 +3702,14 @@ MonoBehaviour:
   - {fileID: 1807930983}
   - {fileID: 121650760}
   - {fileID: 1996963137}
+  players:
+  - {fileID: 647984198}
+  - {fileID: 1937953266}
+  - {fileID: 1124975064}
+  - {fileID: 1430599976}
+  playerNames: []
   paused: 0
-  currentPlayers: 4
+  totalPlayers: 0
   spawnNormTimer: 0
   boostSpawnTimer: 0
   spawnBomberTimer: 0

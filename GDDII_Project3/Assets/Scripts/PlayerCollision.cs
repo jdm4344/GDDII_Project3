@@ -66,6 +66,8 @@ public class PlayerCollision : MonoBehaviour {
         if (lives == 0)
         {
             manager.GetComponent<GameManagerScript>().SubtractPlayer();
+            manager.GetComponent<GameManagerScript>().players[manager.GetComponent<GameManagerScript>().players.IndexOf(gameObject)] = null;
+            manager.GetComponent<GameManagerScript>().placement.Insert(0, manager.GetComponent<GameManagerScript>().playerNames[GetComponent<CarController>().player - 1]);
             Instantiate(explosion, transform.position, transform.rotation);
             Destroy(gameObject);
         }
